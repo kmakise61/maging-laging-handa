@@ -1,0 +1,3031 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Philippines Disaster Preparedness Hub</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        :root {
+  /* Primitive Color Tokens */
+  --color-white: rgba(255, 255, 255, 1);
+  --color-black: rgba(0, 0, 0, 1);
+  --color-cream-50: rgba(252, 252, 249, 1);
+  --color-cream-100: rgba(255, 255, 253, 1);
+  --color-gray-200: rgba(245, 245, 245, 1);
+  --color-gray-300: rgba(167, 169, 169, 1);
+  --color-gray-400: rgba(119, 124, 124, 1);
+  --color-slate-500: rgba(98, 108, 113, 1);
+  --color-brown-600: rgba(94, 82, 64, 1);
+  --color-charcoal-700: rgba(31, 33, 33, 1);
+  --color-charcoal-800: rgba(38, 40, 40, 1);
+  --color-slate-900: rgba(19, 52, 59, 1);
+  --color-teal-300: rgba(50, 184, 198, 1);
+  --color-teal-400: rgba(45, 166, 178, 1);
+  --color-teal-500: rgba(33, 128, 141, 1);
+  --color-teal-600: rgba(29, 116, 128, 1);
+  --color-teal-700: rgba(26, 104, 115, 1);
+  --color-teal-800: rgba(41, 150, 161, 1);
+  --color-red-400: rgba(255, 84, 89, 1);
+  --color-red-500: rgba(192, 21, 47, 1);
+  --color-orange-400: rgba(230, 129, 97, 1);
+  --color-orange-500: rgba(168, 75, 47, 1);
+
+  --color-brown-600-rgb: 94, 82, 64;
+  --color-teal-500-rgb: 33, 128, 141;
+  --color-slate-900-rgb: 19, 52, 59;
+  --color-slate-500-rgb: 98, 108, 113;
+  --color-red-500-rgb: 192, 21, 47;
+  --color-red-400-rgb: 255, 84, 89;
+  --color-orange-500-rgb: 168, 75, 47;
+  --color-orange-400-rgb: 230, 129, 97;
+
+  --color-bg-1: rgba(59, 130, 246, 0.08);
+  --color-bg-2: rgba(245, 158, 11, 0.08);
+  --color-bg-3: rgba(34, 197, 94, 0.08);
+  --color-bg-4: rgba(239, 68, 68, 0.08);
+  --color-bg-5: rgba(147, 51, 234, 0.08);
+  --color-bg-6: rgba(249, 115, 22, 0.08);
+  --color-bg-7: rgba(236, 72, 153, 0.08);
+  --color-bg-8: rgba(6, 182, 212, 0.08);
+
+  --color-background: var(--color-cream-50);
+  --color-surface: var(--color-cream-100);
+  --color-text: var(--color-slate-900);
+  --color-text-secondary: var(--color-slate-500);
+  --color-primary: var(--color-teal-500);
+  --color-primary-hover: var(--color-teal-600);
+  --color-primary-active: var(--color-teal-700);
+  --color-secondary: rgba(var(--color-brown-600-rgb), 0.12);
+  --color-secondary-hover: rgba(var(--color-brown-600-rgb), 0.2);
+  --color-secondary-active: rgba(var(--color-brown-600-rgb), 0.25);
+  --color-border: rgba(var(--color-brown-600-rgb), 0.2);
+  --color-btn-primary-text: var(--color-cream-50);
+  --color-card-border: rgba(var(--color-brown-600-rgb), 0.12);
+  --color-card-border-inner: rgba(var(--color-brown-600-rgb), 0.12);
+  --color-error: var(--color-red-500);
+  --color-success: var(--color-teal-500);
+  --color-warning: var(--color-orange-500);
+  --color-info: var(--color-slate-500);
+  --color-focus-ring: rgba(var(--color-teal-500-rgb), 0.4);
+  --color-select-caret: rgba(var(--color-slate-900-rgb), 0.8);
+
+  --focus-ring: 0 0 0 3px var(--color-focus-ring);
+  --focus-outline: 2px solid var(--color-primary);
+
+  --font-family-base: "FKGroteskNeue", "Geist", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-size-xs: 11px;
+  --font-size-sm: 12px;
+  --font-size-base: 14px;
+  --font-size-md: 14px;
+  --font-size-lg: 16px;
+  --font-size-xl: 18px;
+  --font-size-2xl: 20px;
+  --font-size-3xl: 24px;
+  --font-size-4xl: 30px;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 550;
+  --font-weight-bold: 600;
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.8;
+
+  /* Print-specific variables */
+  --print-margin: 20mm;
+  --print-font-size: 12pt;
+  --print-line-height: 1.6;
+
+  /* First Aid Visual Colors */
+  --firstaid-critical: #E60012;
+  --firstaid-warning: #FF8C00;
+  --firstaid-caution: #FFD700;
+  --firstaid-safe: #228B22;
+  --firstaid-cuts: #3B82F6;
+  --firstaid-burns: #EF4444;
+  --firstaid-sprains: #F59E0B;
+  --firstaid-fractures: #7C3AED;
+  --firstaid-shock: #DC2626;
+
+  --space-4: 4px;
+  --space-8: 8px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-20: 20px;
+  --space-24: 24px;
+  --space-32: 32px;
+
+  --radius-sm: 6px;
+  --radius-base: 8px;
+  --radius-md: 10px;
+  --radius-lg: 12px;
+  --radius-full: 9999px;
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.04), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.04), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --ease-standard: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Philippines flag colors */
+  --ph-blue: #0038a8;
+  --ph-red: #ce1126;
+  --ph-yellow: #fcd116;
+}
+
+
+
+/* HazardHunter Callout Styles */
+.hazardhunter-callout {
+  background: var(--color-surface);
+  border: 2px solid var(--color-primary);
+  border-radius: var(--radius-lg);
+  padding: var(--space-32);
+  text-align: center;
+  margin-bottom: var(--space-32);
+  box-shadow: var(--shadow-lg);
+}
+
+.hazardhunter-icon {
+  font-size: 64px;
+  margin-bottom: var(--space-16);
+}
+
+.hazardhunter-callout h2 {
+  color: var(--color-text);
+  margin-bottom: var(--space-16);
+  font-size: var(--font-size-3xl);
+}
+
+.hazardhunter-note {
+  color: var(--color-text-secondary);
+  max-width: 700px;
+  margin: 0 auto var(--space-24);
+  line-height: 1.6;
+  font-size: var(--font-size-base);
+}
+
+.btn-hazardhunter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-12);
+  background: var(--color-primary);
+  color: var(--color-btn-primary-text);
+  padding: var(--space-20) var(--space-32);
+  border-radius: var(--radius-lg);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  text-decoration: none;
+  transition: all var(--duration-normal) var(--ease-standard);
+  box-shadow: var(--shadow-md);
+  margin: var(--space-24) 0;
+}
+
+.btn-hazardhunter:hover {
+  background: var(--color-primary-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.btn-hazardhunter-text {
+  font-size: var(--font-size-lg);
+}
+
+.btn-hazardhunter-arrow {
+  font-size: var(--font-size-2xl);
+  transition: transform var(--duration-fast);
+}
+
+.btn-hazardhunter:hover .btn-hazardhunter-arrow {
+  transform: translateX(4px);
+}
+
+.hazardhunter-url {
+  font-family: var(--font-family-mono);
+  color: var(--color-primary);
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--space-24);
+  word-break: break-all;
+}
+
+.hazardhunter-features {
+  background: var(--color-bg-1);
+  border-radius: var(--radius-base);
+  padding: var(--space-24);
+  margin-top: var(--space-24);
+  text-align: left;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.hazardhunter-features h4 {
+  color: var(--color-text);
+  margin-bottom: var(--space-12);
+  font-size: var(--font-size-lg);
+}
+
+.hazardhunter-features ul {
+  list-style: none;
+  padding: 0;
+  margin-bottom: var(--space-16);
+}
+
+.hazardhunter-features li {
+  padding: var(--space-8) 0;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-base);
+}
+
+.hazardhunter-verify {
+  color: var(--color-success);
+  font-weight: var(--font-weight-bold);
+  margin: var(--space-16) 0 0 0;
+  text-align: center;
+  font-size: var(--font-size-base);
+}
+
+/* Enhanced print styles for guides */
+.guide-header-print {
+  display: none;
+}
+
+@media print {
+  /* Hide navigation and interactive elements */
+  .header, .nav-menu, .footer, .btn, button, .hotline-actions { 
+    display: none !important; 
+  }
+  
+  /* Print-specific styles */
+  body { 
+    background: white; 
+    color: black;
+    font-size: 12pt;
+    line-height: 1.6;
+  }
+  
+  .section { 
+    display: block !important; 
+    page-break-after: always;
+    padding: 0;
+  }
+  
+  /* Guide formatting */
+  .firstaid-card, .accordion-item, .disease-section { 
+    border: 2px solid #000; 
+    margin-bottom: 20px;
+    page-break-inside: avoid;
+    box-shadow: none;
+  }
+  
+  .accordion-content {
+    display: block !important;
+    padding: 20px;
+  }
+  
+  .accordion-header {
+    background: #f0f0f0 !important;
+    color: black !important;
+    border-bottom: 2px solid #000;
+  }
+  
+  .disaster-phase {
+    background: #f9f9f9;
+    border-left: 4px solid #000;
+    page-break-inside: avoid;
+  }
+  
+  h1, h2, h3, h4 {
+    color: #000;
+    page-break-after: avoid;
+  }
+  
+  h1 {
+    font-size: 24pt;
+    margin-bottom: 20pt;
+    border-bottom: 3px solid #000;
+    padding-bottom: 10pt;
+  }
+  
+  h2 {
+    font-size: 20pt;
+    margin-top: 15pt;
+  }
+  
+  h3 {
+    font-size: 16pt;
+    margin-top: 12pt;
+  }
+  
+  h4 {
+    font-size: 14pt;
+    margin-top: 10pt;
+  }
+  
+  ul, ol {
+    margin-left: 20pt;
+    line-height: 1.8;
+  }
+  
+  li {
+    margin-bottom: 8pt;
+  }
+  
+  .warning-box, .emergency-banner {
+    background: #fff !important;
+    border: 3px solid #000 !important;
+    padding: 15pt;
+    margin: 15pt 0;
+    page-break-inside: avoid;
+  }
+  
+  /* Procedure steps */
+  .procedure-steps li::before {
+    background: #000;
+    color: white;
+  }
+  
+  /* Print header for each section */
+  .section::before {
+    content: "Maging Laging Handa PH - Disaster Preparedness Guide";
+    display: block;
+    text-align: center;
+    font-size: 10pt;
+    color: #666;
+    margin-bottom: 15pt;
+    padding-bottom: 10pt;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  /* Print footer */
+  .section::after {
+    content: "Printed: " attr(data-print-date) " | Emergency: 911 | NDRRMC: (02) 8911-5061";
+    display: block;
+    text-align: center;
+    font-size: 9pt;
+    color: #666;
+    margin-top: 20pt;
+    padding-top: 10pt;
+    border-top: 1px solid #ccc;
+  }
+  
+  /* Image quality */
+  img {
+    max-width: 100%;
+    height: auto;
+    page-break-inside: avoid;
+  }
+  
+  /* Cards and boxes */
+  .card, .hotline-card, .news-item, .report-card {
+    border: 1px solid #ccc;
+    box-shadow: none;
+    page-break-inside: avoid;
+    margin-bottom: 10pt;
+  }
+}
+
+
+
+
+
+@font-face {
+  font-family: 'FKGroteskNeue';
+  src: url('https://r2cdn.perplexity.ai/fonts/FKGroteskNeue.woff2') format('woff2');
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-family-base);
+  background-color: var(--color-background);
+  color: var(--color-text);
+  line-height: var(--line-height-normal);
+  font-size: var(--font-size-base);
+}
+
+.header {
+  background: var(--ph-blue);
+  color: white;
+  padding: var(--space-16) var(--space-24);
+  box-shadow: var(--shadow-md);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.header-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-16);
+}
+
+.logo {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+}
+
+.nav-menu {
+  display: flex;
+  gap: var(--space-8);
+  flex-wrap: wrap;
+}
+
+.nav-btn {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  border: none;
+  padding: var(--space-12) var(--space-20);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  transition: all var(--duration-normal) var(--ease-standard);
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-btn::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 3px;
+  background: white;
+  transition: all var(--duration-normal) var(--ease-standard);
+  transform: translateX(-50%);
+}
+
+.nav-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.nav-btn:hover::after {
+  width: 80%;
+}
+
+.nav-btn.active {
+  background: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  font-weight: var(--font-weight-bold);
+}
+
+.nav-btn.active::after {
+  width: 90%;
+  height: 4px;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: var(--space-24);
+}
+
+.section {
+  display: none;
+}
+
+.section.active {
+  display: block;
+}
+
+.hero {
+  text-align: center;
+  padding: 60px var(--space-24);
+  background: var(--color-bg-1);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-32);
+}
+
+.hero h1 {
+  font-size: 36px;
+  margin-bottom: var(--space-16);
+  color: var(--color-text);
+}
+
+.hero-tagline {
+  font-size: var(--font-size-xl);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-32);
+}
+
+.quick-actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--space-16);
+  margin-bottom: var(--space-32);
+}
+
+.action-card {
+  background: var(--color-surface);
+  padding: var(--space-24);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-card-border);
+  cursor: pointer;
+  transition: all var(--duration-normal) var(--ease-standard);
+  text-align: center;
+}
+
+.action-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.action-icon {
+  font-size: 40px;
+  margin-bottom: var(--space-12);
+}
+
+.action-card h3 {
+  margin-bottom: var(--space-8);
+  font-size: var(--font-size-lg);
+}
+
+.action-card p {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-16);
+  margin-top: var(--space-32);
+}
+
+.stat-card {
+  background: var(--color-surface);
+  padding: var(--space-20);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-card-border);
+  text-align: center;
+}
+
+.stat-value {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary);
+  margin-bottom: var(--space-8);
+}
+
+.stat-label {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.alert-widget {
+  background: var(--color-bg-2);
+  border: 2px solid var(--ph-yellow);
+  padding: var(--space-20);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-24);
+}
+
+.alert-widget h3 {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  margin-bottom: var(--space-16);
+}
+
+.hotline-search {
+  margin-bottom: var(--space-24);
+}
+
+.hotline-search input {
+  width: 100%;
+  padding: var(--space-12);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-base);
+  font-size: var(--font-size-base);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.hotline-category {
+  margin-bottom: var(--space-32);
+}
+
+.hotline-category h3 {
+  margin-bottom: var(--space-16);
+  color: var(--color-text);
+  font-size: var(--font-size-xl);
+}
+
+.hotline-grid {
+  display: grid;
+  gap: var(--space-16);
+}
+
+.hotline-card {
+  background: var(--color-surface);
+  border: 2px solid var(--color-card-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-24);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-20);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--duration-normal) var(--ease-standard);
+  border-left: 6px solid var(--color-primary);
+}
+
+.hotline-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-left-color: var(--color-primary-hover);
+}
+
+.hotline-info h4 {
+  margin-bottom: var(--space-4);
+  font-size: var(--font-size-lg);
+}
+
+.hotline-number {
+  color: var(--color-primary);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-xl);
+  margin-bottom: var(--space-8);
+}
+
+.hotline-service {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.hotline-actions {
+  display: flex;
+  gap: var(--space-8);
+}
+
+.btn {
+  padding: var(--space-8) var(--space-16);
+  border: none;
+  border-radius: var(--radius-base);
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  transition: all var(--duration-fast) var(--ease-standard);
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  color: var(--color-btn-primary-text);
+}
+
+.btn-primary:hover {
+  background: var(--color-primary-hover);
+}
+
+.btn-secondary {
+  background: var(--color-secondary);
+  color: var(--color-text);
+}
+
+.btn-secondary:hover {
+  background: var(--color-secondary-hover);
+}
+
+.btn-call {
+  background: #22c55e;
+  color: white;
+}
+
+.btn-call:hover {
+  background: #16a34a;
+}
+
+#map {
+  height: 500px;
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-24);
+  border: 1px solid var(--color-border);
+}
+
+.map-controls {
+  background: var(--color-surface);
+  padding: var(--space-20);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-card-border);
+  margin-bottom: var(--space-24);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-16);
+  margin-bottom: var(--space-16);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.form-group label {
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-sm);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: var(--space-8) var(--space-12);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-base);
+  font-size: var(--font-size-base);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.reports-list {
+  display: grid;
+  gap: var(--space-16);
+}
+
+.report-card {
+  background: var(--color-surface);
+  border: 2px solid var(--color-card-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-24);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--duration-normal) var(--ease-standard);
+  border-left: 6px solid var(--color-primary);
+  line-height: 1.8;
+}
+
+.report-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.report-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  margin-bottom: var(--space-12);
+}
+
+.report-type {
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-lg);
+}
+
+.severity-badge {
+  padding: var(--space-4) var(--space-12);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+}
+
+.severity-low {
+  background: rgba(34, 197, 94, 0.15);
+  color: #16a34a;
+}
+
+.severity-medium {
+  background: rgba(234, 179, 8, 0.15);
+  color: #ca8a04;
+}
+
+.severity-high {
+  background: rgba(239, 68, 68, 0.15);
+  color: #dc2626;
+}
+
+.report-description {
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-8);
+}
+
+.report-meta {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+}
+
+.accordion {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}
+
+.accordion-item {
+  background: var(--color-surface);
+  border: 2px solid var(--color-card-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--duration-normal) var(--ease-standard);
+  border-left: 6px solid var(--color-primary);
+}
+
+.accordion-item:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateX(4px);
+}
+
+.accordion-header {
+  padding: var(--space-24);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--color-bg-1);
+  transition: all var(--duration-normal) var(--ease-standard);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.accordion-item.active .accordion-header {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%);
+  color: white;
+}
+
+.accordion-header:hover {
+  background: var(--color-bg-2);
+}
+
+.accordion-header h3 {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  margin: 0;
+}
+
+.accordion-item.active .accordion-header h3 {
+  color: white;
+}
+
+.accordion-icon {
+  font-size: var(--font-size-xl);
+  transition: transform var(--duration-normal);
+}
+
+.accordion-item.active .accordion-icon {
+  transform: rotate(180deg);
+}
+
+.accordion-content {
+  display: none;
+  padding: var(--space-32);
+  background: var(--color-surface);
+  line-height: 1.8;
+}
+
+.accordion-item.active .accordion-content {
+  display: block;
+}
+
+.disaster-phase {
+  margin-bottom: var(--space-32);
+  background: var(--color-bg-1);
+  padding: var(--space-24);
+  border-radius: var(--radius-lg);
+  border-left: 6px solid var(--color-primary);
+  box-shadow: var(--shadow-sm);
+}
+
+.disaster-phase h4 {
+  color: var(--color-primary);
+  margin-bottom: var(--space-16);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+}
+
+.disaster-phase ul {
+  list-style-position: inside;
+  color: var(--color-text-secondary);
+}
+
+.disaster-phase li {
+  padding: var(--space-12) 0;
+  border-bottom: 1px solid var(--color-card-border);
+  line-height: 1.8;
+  font-size: var(--font-size-base);
+}
+
+.disaster-phase li:last-child {
+  border-bottom: none;
+}
+
+.marketplace-categories {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-20);
+}
+
+.category-card {
+  background: var(--color-surface);
+  border: 2px solid var(--color-card-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-32);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--duration-normal) var(--ease-standard);
+  border-left: 6px solid var(--color-primary);
+}
+
+.category-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.category-card h3 {
+  margin-bottom: var(--space-20);
+  color: var(--color-text);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  padding-bottom: var(--space-12);
+  border-bottom: 2px solid var(--color-border);
+}
+
+.category-card ul {
+  list-style: none;
+  margin-bottom: var(--space-16);
+}
+
+.category-card li {
+  padding: var(--space-12) 0;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-base);
+  line-height: 1.8;
+  border-bottom: 1px solid var(--color-card-border);
+}
+
+.category-card li:last-child {
+  border-bottom: none;
+}
+
+.category-card li::before {
+  content: "✓ ";
+  color: var(--color-success);
+  font-weight: bold;
+  margin-right: var(--space-4);
+}
+
+.shop-links {
+  display: flex;
+  gap: var(--space-8);
+  flex-wrap: wrap;
+}
+
+.shop-btn {
+  flex: 1;
+  min-width: 100px;
+  text-align: center;
+  text-decoration: none;
+}
+
+.disease-tabs {
+  display: flex;
+  gap: var(--space-8);
+  margin-bottom: var(--space-24);
+}
+
+.tab-btn {
+  flex: 1;
+  padding: var(--space-12) var(--space-24);
+  border: 1px solid var(--color-border);
+  background: var(--color-secondary);
+  color: var(--color-text);
+  cursor: pointer;
+  border-radius: var(--radius-base);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  transition: all var(--duration-fast);
+}
+
+.tab-btn.active {
+  background: var(--color-primary);
+  color: var(--color-btn-primary-text);
+  border-color: var(--color-primary);
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+.disease-section {
+  background: var(--color-surface);
+  border: 2px solid var(--color-card-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-32);
+  margin-bottom: var(--space-24);
+  box-shadow: var(--shadow-sm);
+  border-left: 6px solid var(--color-primary);
+  line-height: 1.8;
+}
+
+.disease-section h3 {
+  margin-bottom: var(--space-20);
+  color: var(--color-text);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  padding-bottom: var(--space-12);
+  border-bottom: 2px solid var(--color-border);
+}
+
+.symptoms-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-12);
+  margin-top: var(--space-12);
+}
+
+.symptom-item {
+  background: var(--color-bg-3);
+  padding: var(--space-12);
+  border-radius: var(--radius-base);
+  font-size: var(--font-size-sm);
+  text-align: center;
+}
+
+.warning-box {
+  background: rgba(var(--color-error-rgb), 0.1);
+  border: 3px solid var(--color-error);
+  padding: var(--space-24);
+  border-radius: var(--radius-lg);
+  margin-top: var(--space-24);
+  box-shadow: 0 4px 12px rgba(var(--color-error-rgb), 0.15);
+}
+
+.warning-box h4 {
+  color: var(--color-error);
+  margin-bottom: var(--space-16);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+}
+
+.news-feed {
+  display: grid;
+  gap: var(--space-16);
+}
+
+.news-item {
+  background: var(--color-surface);
+  border: 2px solid var(--color-card-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-24);
+  display: flex;
+  gap: var(--space-20);
+  align-items: start;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--duration-normal) var(--ease-standard);
+  border-left: 6px solid var(--color-primary);
+}
+
+.news-item:hover {
+  transform: translateX(4px);
+  box-shadow: var(--shadow-md);
+}
+
+.news-badge {
+  padding: var(--space-4) var(--space-12);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  white-space: nowrap;
+}
+
+.badge-alert {
+  background: rgba(239, 68, 68, 0.15);
+  color: #dc2626;
+}
+
+.badge-warning {
+  background: rgba(234, 179, 8, 0.15);
+  color: #ca8a04;
+}
+
+.badge-info {
+  background: var(--color-bg-1);
+  color: var(--color-primary);
+}
+
+.news-content h4 {
+  margin-bottom: var(--space-8);
+}
+
+.news-meta {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  margin-top: var(--space-8);
+}
+
+.hazard-finder {
+  background: var(--color-surface);
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-24);
+  margin-bottom: var(--space-24);
+}
+
+.hazard-result {
+  margin-top: var(--space-24);
+  padding: var(--space-20);
+  background: var(--color-bg-1);
+  border-radius: var(--radius-lg);
+}
+
+.risk-level {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--space-16);
+}
+
+.risk-low { color: #16a34a; }
+.risk-moderate { color: #ca8a04; }
+.risk-high { color: #dc2626; }
+
+.hazards-detected {
+  display: grid;
+  gap: var(--space-12);
+}
+
+.hazard-item {
+  background: var(--color-surface);
+  padding: var(--space-16);
+  border-radius: var(--radius-base);
+  border-left: 4px solid var(--color-primary);
+}
+
+.quiz-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.quiz-header {
+  background: var(--color-surface);
+  border: 2px solid var(--color-card-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-32);
+  margin-bottom: var(--space-24);
+  text-align: center;
+  box-shadow: var(--shadow-md);
+  border-top: 6px solid var(--color-primary);
+}
+
+.quiz-progress {
+  background: var(--color-secondary);
+  height: 8px;
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  margin-top: var(--space-16);
+}
+
+.quiz-progress-bar {
+  background: var(--color-primary);
+  height: 100%;
+  transition: width var(--duration-normal);
+}
+
+.question-card {
+  background: var(--color-surface);
+  border: 2px solid var(--color-card-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-32);
+  margin-bottom: var(--space-24);
+  box-shadow: var(--shadow-md);
+  border-left: 6px solid var(--color-primary);
+  line-height: 1.8;
+}
+
+.question-number {
+  color: var(--color-primary);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--space-8);
+}
+
+.question-text {
+  font-size: var(--font-size-xl);
+  margin-bottom: var(--space-24);
+  font-weight: var(--font-weight-medium);
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+}
+
+.option-btn {
+  padding: var(--space-16);
+  border: 2px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+  border-radius: var(--radius-base);
+  cursor: pointer;
+  text-align: left;
+  font-size: var(--font-size-base);
+  transition: all var(--duration-fast);
+}
+
+.option-btn:hover {
+  background: var(--color-secondary);
+  border-color: var(--color-primary);
+}
+
+.option-btn.selected {
+  background: var(--color-primary);
+  color: var(--color-btn-primary-text);
+  border-color: var(--color-primary);
+}
+
+.option-btn.correct {
+  background: rgba(34, 197, 94, 0.15);
+  border-color: #16a34a;
+  color: #16a34a;
+}
+
+.option-btn.incorrect {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: #dc2626;
+  color: #dc2626;
+}
+
+.quiz-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-16);
+}
+
+.feedback {
+  background: var(--color-bg-1);
+  padding: var(--space-16);
+  border-radius: var(--radius-base);
+  margin-top: var(--space-16);
+}
+
+.feedback.correct {
+  background: rgba(34, 197, 94, 0.15);
+  color: #16a34a;
+}
+
+.feedback.incorrect {
+  background: rgba(239, 68, 68, 0.15);
+  color: #dc2626;
+}
+
+.quiz-results {
+  background: var(--color-surface);
+  border: 2px solid var(--color-card-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-32);
+  text-align: center;
+  box-shadow: var(--shadow-lg);
+  border-top: 6px solid var(--color-success);
+}
+
+.results-score {
+  font-size: 48px;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary);
+  margin: var(--space-24) 0;
+}
+
+.results-message {
+  font-size: var(--font-size-xl);
+  margin-bottom: var(--space-24);
+}
+
+.footer {
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+  padding: var(--space-32) var(--space-24);
+  margin-top: var(--space-32);
+}
+
+.footer-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--space-32);
+}
+
+.footer-section h4 {
+  margin-bottom: var(--space-16);
+}
+
+.footer-links {
+  list-style: none;
+}
+
+.footer-links li {
+  margin-bottom: var(--space-8);
+}
+
+.footer-links a {
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  transition: color var(--duration-fast);
+}
+
+.footer-links a:hover {
+  color: var(--color-primary);
+}
+
+.copyright {
+  text-align: center;
+  margin-top: var(--space-32);
+  padding-top: var(--space-24);
+  border-top: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.critical-hotlines-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--space-16);
+  margin-bottom: var(--space-24);
+}
+
+.critical-hotline-card {
+  padding: var(--space-24);
+  border-radius: var(--radius-lg);
+  color: white;
+  text-align: center;
+  box-shadow: var(--shadow-lg);
+  transition: transform var(--duration-normal);
+}
+
+.critical-hotline-card:hover {
+  transform: translateY(-4px);
+}
+
+.hotline-badge {
+  background: rgba(255, 255, 255, 0.2);
+  padding: var(--space-4) var(--space-12);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  display: inline-block;
+  margin-bottom: var(--space-12);
+}
+
+.hotline-icon {
+  font-size: 48px;
+  margin-bottom: var(--space-8);
+}
+
+.hotline-name {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--space-12);
+}
+
+.critical-hotline-number {
+  display: block;
+  font-size: 36px;
+  font-weight: var(--font-weight-bold);
+  color: white;
+  text-decoration: none;
+  margin: var(--space-16) 0;
+  padding: var(--space-12);
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-base);
+  transition: all var(--duration-fast);
+}
+
+.critical-hotline-number:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: scale(1.05);
+}
+
+.hotline-description {
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--space-8);
+}
+
+.hotline-availability {
+  font-size: var(--font-size-xs);
+  opacity: 0.9;
+  margin-bottom: var(--space-16);
+}
+
+.btn-copy {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: var(--space-8) var(--space-16);
+  border-radius: var(--radius-base);
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+  transition: all var(--duration-fast);
+}
+
+.btn-copy:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.live-feeds-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: var(--space-20);
+  margin-bottom: var(--space-32);
+}
+
+.feed-card {
+  background: var(--color-surface);
+  border: 2px solid var(--color-card-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  transition: all var(--duration-normal) var(--ease-standard);
+}
+
+.feed-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.feed-header {
+  padding: var(--space-16);
+  background: var(--color-bg-1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.feed-header h3 {
+  font-size: var(--font-size-lg);
+  margin: 0;
+}
+
+.live-indicator {
+  background: #dc2626;
+  color: white;
+  padding: var(--space-4) var(--space-12);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+.feed-content {
+  padding: var(--space-20);
+}
+
+.weather-details {
+  display: grid;
+  gap: var(--space-8);
+  margin-top: var(--space-12);
+}
+
+.weather-item {
+  padding: var(--space-8);
+  background: var(--color-bg-2);
+  border-radius: var(--radius-base);
+  font-size: var(--font-size-sm);
+}
+
+.alert-section {
+  margin-bottom: var(--space-12);
+}
+
+.operations-list div {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.feed-footer {
+  padding: var(--space-16);
+  background: var(--color-bg-1);
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-12);
+}
+
+.feed-footer small {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-xs);
+}
+
+.btn-sm {
+  padding: var(--space-4) var(--space-12);
+  font-size: var(--font-size-xs);
+}
+
+.stat-source {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  margin-top: var(--space-8);
+}
+
+.emergency-banner {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  color: white;
+  padding: var(--space-24);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-32);
+  text-align: center;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  box-shadow: 0 6px 20px rgba(220, 38, 38, 0.3);
+  border: 3px solid rgba(255, 255, 255, 0.2);
+}
+
+.firstaid-tabs {
+  display: flex;
+  gap: var(--space-12);
+  margin-bottom: var(--space-32);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.firstaid-tab-btn {
+  flex: 1;
+  min-width: 140px;
+  padding: var(--space-16) var(--space-24);
+  border: 2px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  transition: all var(--duration-normal);
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+}
+
+.firstaid-tab-btn:hover {
+  background: var(--color-secondary-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.firstaid-tab-btn.active {
+  background: var(--color-primary);
+  color: var(--color-btn-primary-text);
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+.firstaid-content {
+  display: none;
+}
+
+.firstaid-content.active {
+  display: block;
+}
+
+.firstaid-card {
+  background: var(--color-surface);
+  border: 2px solid var(--color-card-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-32);
+  box-shadow: var(--shadow-md);
+}
+
+.firstaid-card h3 {
+  margin-bottom: var(--space-24);
+  color: var(--color-text);
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  padding-bottom: var(--space-16);
+  border-bottom: 3px solid var(--color-primary);
+}
+
+.firstaid-section {
+  margin-bottom: var(--space-32);
+  background: var(--color-bg-1);
+  padding: var(--space-24);
+  border-radius: var(--radius-lg);
+  border-left: 4px solid var(--color-primary);
+}
+
+.firstaid-section h4 {
+  margin-bottom: var(--space-16);
+  color: var(--color-primary);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+}
+
+.firstaid-section ul,
+.firstaid-section ol {
+  margin-left: var(--space-20);
+  color: var(--color-text);
+  line-height: var(--line-height-relaxed);
+}
+
+.firstaid-section li {
+  margin-bottom: var(--space-12);
+  line-height: var(--line-height-relaxed);
+  padding: var(--space-8) 0;
+  font-size: var(--font-size-base);
+}
+
+.procedure-steps {
+  counter-reset: step-counter;
+  list-style: none;
+  margin-left: 0;
+}
+
+.procedure-steps li {
+  counter-increment: step-counter;
+  padding-left: 48px;
+  position: relative;
+  margin-bottom: var(--space-20);
+  background: var(--color-surface);
+  padding: var(--space-16) var(--space-16) var(--space-16) 56px;
+  border-radius: var(--radius-base);
+  box-shadow: var(--shadow-sm);
+}
+
+.procedure-steps li::before {
+  content: counter(step-counter);
+  position: absolute;
+  left: 0;
+  background: var(--color-primary);
+  color: var(--color-btn-primary-text);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-base);
+  box-shadow: var(--shadow-sm);
+}
+
+.burn-types {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-12);
+  margin-top: var(--space-12);
+}
+
+.burn-type-card {
+  background: var(--color-bg-1);
+  padding: var(--space-20);
+  border-radius: var(--radius-lg);
+  border-left: 6px solid var(--color-primary);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--duration-fast);
+}
+
+.burn-type-card:hover {
+  transform: translateX(4px);
+  box-shadow: var(--shadow-md);
+}
+
+.burn-type-card strong {
+  display: block;
+  margin-bottom: var(--space-12);
+  color: var(--color-text);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+}
+
+.burn-type-card p {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.rice-method {
+  display: grid;
+  gap: var(--space-16);
+  margin-top: var(--space-12);
+}
+
+.rice-item {
+  display: flex;
+  gap: var(--space-20);
+  align-items: start;
+  background: var(--color-bg-3);
+  padding: var(--space-24);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--duration-fast);
+}
+
+.rice-item:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.rice-letter {
+  background: var(--color-primary);
+  color: var(--color-btn-primary-text);
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(var(--color-primary-rgb, 33, 128, 141), 0.3);
+}
+
+.rice-item strong {
+  display: block;
+  margin-bottom: var(--space-8);
+  color: var(--color-text);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+}
+
+.rice-item p {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.source-attribution {
+  margin-top: var(--space-24);
+  padding-top: var(--space-20);
+  border-top: 2px solid var(--color-border);
+}
+
+.source-attribution small {
+  color: var(--color-text-secondary);
+  font-style: italic;
+  font-size: var(--font-size-sm);
+  line-height: 1.6;
+}
+
+.reporting-callout {
+  background: var(--color-bg-1);
+  border: 2px solid var(--color-primary);
+  border-radius: var(--radius-lg);
+  padding: var(--space-24);
+  margin-bottom: var(--space-32);
+}
+
+.reporting-callout h3 {
+  margin-bottom: var(--space-12);
+}
+
+.official-channels {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--space-16);
+  margin-top: var(--space-16);
+}
+
+.channel-card {
+  background: var(--color-surface);
+  padding: var(--space-16);
+  border-radius: var(--radius-base);
+  border: 1px solid var(--color-border);
+}
+
+.incident-disclaimer {
+  background: var(--color-bg-2);
+  padding: var(--space-16);
+  border-radius: var(--radius-base);
+  margin-bottom: var(--space-16);
+}
+
+@media (max-width: 768px) {
+  .hero h1 {
+    font-size: 28px;
+  }
+
+  .nav-menu {
+    width: 100%;
+  }
+
+  .nav-btn {
+    flex: 1;
+    min-width: 150px;
+  }
+
+  .hotline-card {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .quiz-actions {
+    flex-direction: column;
+  }
+
+  #map {
+    height: 350px;
+  }
+
+  .critical-hotlines-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .critical-hotline-number {
+    font-size: 28px;
+  }
+
+  .live-feeds-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .firstaid-tabs {
+    flex-direction: column;
+  }
+
+  .firstaid-tab-btn {
+    width: 100%;
+  }
+
+  .feed-footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .theme-toggle {
+    position: absolute;
+    right: var(--space-16);
+    top: var(--space-16);
+  }
+
+  .hazardhunter-callout {
+    padding: var(--space-20);
+  }
+
+  .hazardhunter-icon {
+    font-size: 48px;
+  }
+
+  .btn-hazardhunter {
+    font-size: var(--font-size-base);
+    padding: var(--space-16) var(--space-20);
+  }
+
+  .btn-hazardhunter-text {
+    font-size: var(--font-size-base);
+  }
+}
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <span>🛡️</span>
+                <span>Maging Laging Handa PH</span>
+            </div>
+            <nav class="nav-menu">
+                <button class="nav-btn active" onclick="showSection('home')">🏠 Home</button>
+                <button class="nav-btn" style="background: #E60012; color: white;" onclick="showSection('hotlines')">🔴 Hotlines</button>
+                <button class="nav-btn" style="background: #0066CC; color: white;" onclick="showSection('incidents')">📋 Incident Report</button>
+                <button class="nav-btn" style="background: #FF8C00; color: white;" onclick="showSection('guides')">🆘 Guides</button>
+                <button class="nav-btn" style="background: #228B22; color: white;" onclick="showSection('firstaid')">🩹 First Aid</button>
+                <button class="nav-btn" style="background: #9370DB; color: white;" onclick="showSection('diseases')">⚕️ Disease Info</button>
+                <button class="nav-btn" style="background: #FFD700; color: white;" onclick="showSection('hazards')">🗺️ Hazard Maps</button>
+                <button class="nav-btn" style="background: #1C3A70; color: white;" onclick="showSection('quiz')">🎓 Quiz</button>
+            </nav>
+
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- HOME SECTION -->
+        <section id="home" class="section active">
+            <div class="hero">
+                <h1>🇵🇭 Maging Laging Handa PH</h1>
+                <p class="hero-tagline">Always Be Ready Philippines</p>
+                <p style="color: var(--color-text-secondary); max-width: 800px; margin: 0 auto;">Your comprehensive resource for disaster preparedness, emergency response, and community safety in the Philippines.</p>
+            </div>
+
+            <!-- CRITICAL HOTLINES HERO SECTION -->
+            <h2 style="margin: var(--space-32) 0 var(--space-16); text-align: center; color: var(--ph-red);">🚨 Emergency Hotlines - Call Now</h2>
+            <div class="critical-hotlines-grid">
+                <div class="critical-hotline-card" style="background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);">
+                    <div class="hotline-badge">LIFE THREATENING</div>
+                    <div class="hotline-icon">🚨</div>
+                    <div class="hotline-name">National Emergency</div>
+                    <a href="tel:911" class="critical-hotline-number">911</a>
+                    <div class="hotline-description">Police, Fire, Medical Emergency</div>
+                    <div class="hotline-availability">24/7 Available</div>
+                    <button class="btn-copy" onclick="copyToClipboard('911')">📋 Copy Number</button>
+                </div>
+                <div class="critical-hotline-card" style="background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);">
+                    <div class="hotline-badge">LIFE THREATENING</div>
+                    <div class="hotline-icon">🏥</div>
+                    <div class="hotline-name">Philippine Red Cross</div>
+                    <a href="tel:143" class="critical-hotline-number">143</a>
+                    <div class="hotline-description">Medical Aid &amp; Disaster Response</div>
+                    <div class="hotline-availability">24/7 Available</div>
+                    <button class="btn-copy" onclick="copyToClipboard('143')">📋 Copy Number</button>
+                </div>
+                <div class="critical-hotline-card" style="background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);">
+                    <div class="hotline-badge">URGENT</div>
+                    <div class="hotline-icon">🛡️</div>
+                    <div class="hotline-name">NDRRMC Hotline</div>
+                    <a href="tel:0289115061" class="critical-hotline-number">(02) 8911-5061</a>
+                    <div class="hotline-description">Disaster Risk Reduction</div>
+                    <div class="hotline-availability">24/7 Available</div>
+                    <button class="btn-copy" onclick="copyToClipboard('(02) 8911-5061')">📋 Copy Number</button>
+                </div>
+                <div class="critical-hotline-card" style="background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);">
+                    <div class="hotline-badge">URGENT</div>
+                    <div class="hotline-icon">👮</div>
+                    <div class="hotline-name">PNP Emergency</div>
+                    <a href="tel:117" class="critical-hotline-number">117</a>
+                    <div class="hotline-description">Police Emergency Dispatch</div>
+                    <div class="hotline-availability">24/7 Available</div>
+                    <button class="btn-copy" onclick="copyToClipboard('117')">📋 Copy Number</button>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: var(--space-16);">
+                <button class="btn btn-secondary" onclick="showSection('hotlines')" style="padding: var(--space-12) var(--space-32);">View All Hotlines Directory →</button>
+            </div>
+
+            <!-- NEWS AGGREGATION SECTION -->
+            <h2 style="margin: var(--space-32) 0 var(--space-16); text-align: center;">📰 Latest Disaster News</h2>
+            <div style="background: var(--color-surface); border: 1px solid var(--color-card-border); border-radius: var(--radius-lg); padding: var(--space-24); margin-bottom: var(--space-32);">
+                <p style="color: var(--color-text-secondary); text-align: center; margin-bottom: var(--space-20);">Stay informed with the latest disaster and weather updates from trusted news sources:</p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-16);">
+                    <a href="https://news.abs-cbn.com/" target="_blank" class="btn btn-primary" style="text-align: center;">📺 ABS-CBN News</a>
+                    <a href="https://www.rappler.com/" target="_blank" class="btn btn-primary" style="text-align: center;">📰 Rappler</a>
+                    <a href="https://www.pna.gov.ph/" target="_blank" class="btn btn-primary" style="text-align: center;">🏤 PNA (Official)</a>
+                    <a href="https://www.inquirer.net/" target="_blank" class="btn btn-primary" style="text-align: center;">📝 Inquirer</a>
+                </div>
+                <p style="font-size: var(--font-size-xs); color: var(--color-text-secondary); text-align: center; margin-top: var(--space-16);">Filter by: Weather | Seismic Activity | Floods | Disease Outbreaks | Emergency Response</p>
+            </div>
+
+            <!-- PDRF Resource Section -->
+            <div style="background: var(--color-bg-5); border: 2px solid var(--color-primary); border-radius: var(--radius-lg); padding: var(--space-24); margin-bottom: var(--space-32);">
+                <h3 style="margin-bottom: var(--space-12); color: var(--color-text);">🤝 Additional Resource: Philippine Disaster Resilience Foundation (PDRF)</h3>
+                <p style="color: var(--color-text-secondary); margin-bottom: var(--space-16);">The PDRF is the private sector's primary coordinator for disaster resilience and response in the Philippines. They work alongside government agencies to provide emergency relief and build community resilience.</p>
+                <div style="background: var(--color-surface); padding: var(--space-16); border-radius: var(--radius-base); margin-bottom: var(--space-16);">
+                    <h4 style="font-size: var(--font-size-base); margin-bottom: var(--space-8);">What PDRF Does:</h4>
+                    <ul style="margin-left: var(--space-20); color: var(--color-text-secondary); font-size: var(--font-size-sm);">
+                        <li>Coordinates private sector disaster response operations</li>
+                        <li>Provides emergency relief supplies and logistics support</li>
+                        <li>Builds community disaster preparedness capacity</li>
+                        <li>Partners with government agencies (NDRRMC, OCD, LGUs)</li>
+                        <li>Supports long-term recovery and rehabilitation programs</li>
+                    </ul>
+                </div>
+                <a href="https://www.pdrf.org/" target="_blank" class="btn btn-primary" style="display: inline-block;">🌐 Visit PDRF Website →</a>
+                <p style="font-size: var(--font-size-xs); margin-top: var(--space-12); color: var(--color-text-secondary);"><em><strong>Note:</strong> This is not a partnership. PDRF is cited as an additional educational resource for disaster preparedness information.</em></p>
+            </div>
+
+            <!-- LIVE OFFICIAL ALERT FEEDS -->
+            <h2 style="margin: var(--space-32) 0 var(--space-16); text-align: center;">📡 Live Official Alerts</h2>
+            <div class="live-feeds-grid">
+                <div class="feed-card pagasa-feed">
+                    <div class="feed-header">
+                        <h3>🌤️ PAGASA Weather Alerts</h3>
+                        <div class="live-indicator">🔴 LIVE</div>
+                    </div>
+                    <div class="feed-content">
+                        <div class="alert-level" style="background: rgba(234, 179, 8, 0.15); color: #ca8a04; padding: var(--space-12); border-radius: var(--radius-base); margin-bottom: var(--space-12);">
+                            <strong>⚠️ TYPHOON UWAN - Wind Signal 2</strong>
+                        </div>
+                        <p style="color: var(--color-text-secondary); margin-bottom: var(--space-12);">Northern Luzon experiencing tropical storm conditions. Moderate to heavy rainfall expected in the next 24 hours.</p>
+                        <div class="weather-details">
+                            <div class="weather-item">🌡️ Temperature: 26-30°C</div>
+                            <div class="weather-item">💨 Wind Speed: 60-100 km/h</div>
+                            <div class="weather-item">🌧️ Rainfall: Moderate to Heavy</div>
+                        </div>
+                    </div>
+                    <div class="feed-footer">
+                        <small>Source: PAGASA | As of: Nov 11, 2025, 10:30 AM</small>
+                        <div>
+                            <a href="https://pagasa.dost.gov.ph/" target="_blank" class="btn btn-secondary btn-sm">PAGASA Website →</a>
+                            <a href="https://panahon.gov.ph/" target="_blank" class="btn btn-secondary btn-sm" style="margin-left: 8px;">Panahon.gov.ph →</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="feed-card phivolcs-feed">
+                    <div class="feed-header">
+                        <h3>🌋 PHIVOLCS Earthquake/Volcano Alerts</h3>
+                        <div class="live-indicator">🔴 LIVE</div>
+                    </div>
+                    <div class="feed-content">
+                        <div class="alert-section">
+                            <strong>Latest Earthquake:</strong>
+                            <div style="background: var(--color-bg-1); padding: var(--space-12); border-radius: var(--radius-base); margin-top: var(--space-8);">
+                                <div>📍 <strong>Magnitude 6.7</strong> - Off Honshu, Japan</div>
+                                <div style="font-size: var(--font-size-sm); color: var(--color-text-secondary); margin-top: var(--space-4);">Nov 9, 2025, 4:04 PM | Depth: 10km</div>
+                                <div style="margin-top: var(--space-4); color: var(--color-warning);">⚠️ Tsunami Information #1 issued</div>
+                            </div>
+                        </div>
+                        <div class="alert-section" style="margin-top: var(--space-16);">
+                            <strong>Volcano Status:</strong>
+                            <div style="background: rgba(234, 179, 8, 0.15); padding: var(--space-12); border-radius: var(--radius-base); margin-top: var(--space-8);">
+                                <div>🌋 <strong>Taal Volcano - Alert Level 2</strong></div>
+                                <div style="font-size: var(--font-size-sm); margin-top: var(--space-4);">Increased unrest. Entry to Volcano Island strictly prohibited.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="feed-footer">
+                        <small>Source: PHIVOLCS | As of: Nov 11, 2025, 10:42 AM</small>
+                        <a href="https://phivolcs.dost.gov.ph/" target="_blank" class="btn btn-secondary btn-sm">PHIVOLCS Public Website →</a>
+                    </div>
+                </div>
+
+                <div class="feed-card ndrrmc-feed">
+                    <div class="feed-header">
+                        <h3>🛡️ NDRRMC Disaster Updates</h3>
+                        <div class="live-indicator">🔴 LIVE</div>
+                    </div>
+                    <div class="feed-content">
+                        <div class="alert-level" style="background: var(--color-bg-3); padding: var(--space-12); border-radius: var(--radius-base); margin-bottom: var(--space-12);">
+                            <strong>✅ Active Operations: Typhoon UWAN Response</strong>
+                        </div>
+                        <p style="color: var(--color-text-secondary); margin-bottom: var(--space-12);">Relief operations ongoing in Northern Luzon. Pre-positioned supplies ready for deployment.</p>
+                        <div class="operations-list">
+                            <div style="padding: var(--space-8) 0; border-bottom: 1px solid var(--color-border);">📦 Relief goods distributed: 2,500 family packs</div>
+                            <div style="padding: var(--space-8) 0; border-bottom: 1px solid var(--color-border);">🏕️ Evacuation centers active: 45 locations</div>
+                            <div style="padding: var(--space-8) 0;">👥 Families evacuated: 1,200+</div>
+                        </div>
+                    </div>
+                    <div class="feed-footer">
+                        <small>Source: NDRRMC | As of: Nov 11, 2025, 10:42 AM</small>
+                        <div>
+                            <a href="https://www.ndrrmc.gov.ph" target="_blank" class="btn btn-secondary btn-sm">NDRRMC Website →</a>
+                            <a href="https://www.facebook.com/NDRRMC.officialpage/" target="_blank" class="btn btn-secondary btn-sm" style="margin-left: 8px;">NDRRMC Facebook →</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h2 style="margin-bottom: var(--space-24); text-align: center;">Quick Access</h2>
+            <div class="quick-actions">
+                <div class="action-card" onclick="showSection('hotlines')">
+                    <div class="action-icon">📞</div>
+                    <h3>Emergency Hotlines</h3>
+                    <p>Access emergency numbers and resource directory</p>
+                </div>
+                <div class="action-card" onclick="showSection('incidents')">
+                    <div class="action-icon">📍</div>
+                    <h3>Official Incident Reports</h3>
+                    <p>View real-time incident map &amp; report to authorities</p>
+                </div>
+                <div class="action-card" onclick="showSection('firstaid')">
+                    <div class="action-icon">🏥</div>
+                    <h3>Basic First Aid</h3>
+                    <p>Emergency care for cuts, burns, sprains &amp; more</p>
+                </div>
+                <div class="action-card" onclick="showSection('guides')">
+                    <div class="action-icon">📋</div>
+                    <h3>Safety Guides (Operation L!STO)</h3>
+                    <p>Before, during, and after disaster protocols</p>
+                </div>
+                <div class="action-card" onclick="showSection('quiz')">
+                    <div class="action-icon">🎯</div>
+                    <h3>Test Your Knowledge</h3>
+                    <p>Take disaster preparedness quizzes</p>
+                </div>
+            </div>
+
+            <h2 style="margin: var(--space-32) 0 var(--space-24); text-align: center;">Philippines Health &amp; Disaster Statistics</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value">8,460</div>
+                    <div class="stat-label">Dengue Cases (Oct 1-15, 2025) | Recent Surge</div>
+                    <div class="stat-source">Source: DOH via Inquirer | As of: Oct 15, 2025</div>
+                    <a href="https://newsinfo.inquirer.net/2129913/doh-logs-8460-dengue-cases-in-first-2-weeks-of-october" target="_blank" style="font-size: var(--font-size-xs); color: var(--color-primary);">📰 View Full Article →</a>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">437+</div>
+                    <div class="stat-label">Dengue Deaths (Mid-2025)</div>
+                    <div class="stat-source">As of: August 20, 2025</div>
+                    <a href="https://www.vax-before-travel.com/2025/08/20/philippines-reports-437-dengue-related-deaths" target="_blank" style="font-size: var(--font-size-xs); color: var(--color-primary);">📰 View Full Article →</a>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">4,859</div>
+                    <div class="stat-label">Leptospirosis Cases | 43.4% ↑</div>
+                    <div class="stat-source">June-Sept 2025 | Source: DOH</div>
+                    <a href="https://www.doh.gov.ph/" target="_blank" style="font-size: var(--font-size-xs); color: var(--color-primary);">DOH Official Site →</a>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">24/7</div>
+                    <div class="stat-label">Emergency Support Available</div>
+                    <div class="stat-source">Call 911 for emergencies</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- HOTLINES SECTION -->
+        <section id="hotlines" class="section">
+            <h1 style="margin-bottom: var(--space-16); color: var(--color-text);">🚨 Emergency Hotlines &amp; Resource Directory</h1>
+            <p style="color: var(--color-text-secondary); margin-bottom: var(--space-24); line-height: 1.8;">Quick access to all emergency services and government agency hotlines</p>
+            
+            <div class="hotline-search" style="margin-bottom: var(--space-32);">
+                <input type="text" placeholder="🔍 Search hotlines by name or service..." id="hotlineSearch" onkeyup="searchHotlines()" style="padding: var(--space-16); font-size: var(--font-size-base);">
+            </div>
+
+            <div class="hotline-category" style="background: var(--color-bg-4); padding: var(--space-24); border-radius: var(--radius-lg); margin-bottom: var(--space-32); border-left: 6px solid var(--color-error);">
+                <h3 style="color: var(--color-error); margin-bottom: var(--space-20); font-size: var(--font-size-2xl);">🚑 National Emergency Hotlines</h3>
+                <div class="hotline-grid" id="nationalHotlines"></div>
+            </div>
+
+            <div class="hotline-category" style="background: var(--color-bg-1); padding: var(--space-24); border-radius: var(--radius-lg); margin-bottom: var(--space-32); border-left: 6px solid var(--color-primary);">
+                <h3 style="color: var(--color-primary); margin-bottom: var(--space-20); font-size: var(--font-size-2xl);">🌤️ Weather &amp; Geological Services</h3>
+                <div class="hotline-grid" id="weatherHotlines"></div>
+            </div>
+        </section>
+
+        <!-- FIRST AID SECTION -->
+        <section id="firstaid" class="section">
+            <h1 style="margin-bottom: var(--space-16);">🏥 Basic First Aid Guide</h1>
+            <p style="color: var(--color-text-secondary); margin-bottom: var(--space-24);">Essential first aid procedures for common disaster-related injuries</p>
+            
+            <div class="guide-print-controls">
+                <button class="btn btn-primary" onclick="printAllFirstAid()" style="padding: var(--space-12) var(--space-24);">
+                    🖨️ Print All First Aid Guides
+                </button>
+                <button class="btn btn-secondary" onclick="downloadAllFirstAid()" style="padding: var(--space-12) var(--space-24); margin-left: var(--space-12);">
+                    💾 Download All as PDF
+                </button>
+            </div>
+            <p style="text-align: center; color: var(--color-text-secondary); font-size: var(--font-size-sm); margin-bottom: var(--space-24);">Individual guides can be printed from within each section</p>
+            
+            <div class="emergency-banner">
+                <strong>⚠️ EMERGENCY:</strong> For severe injuries, bleeding that won't stop, difficulty breathing, or loss of consciousness - <strong>CALL 911 IMMEDIATELY</strong>
+            </div>
+
+            <div class="firstaid-tabs">
+                <button class="firstaid-tab-btn active" onclick="showFirstAidTab('cuts')">Cuts &amp; Wounds</button>
+                <button class="firstaid-tab-btn" onclick="showFirstAidTab('burns')">Burns</button>
+                <button class="firstaid-tab-btn" onclick="showFirstAidTab('sprains')">Sprains</button>
+                <button class="firstaid-tab-btn" onclick="showFirstAidTab('fractures')">Fractures</button>
+                <button class="firstaid-tab-btn" onclick="showFirstAidTab('shock')">Shock</button>
+            </div>
+
+            <div id="cuts-tab" class="firstaid-content active">
+                <div class="firstaid-card" style="border-top: 6px solid #3B82F6;">
+                    <div style="background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%); color: white; padding: var(--space-16); border-radius: var(--radius-lg); margin-bottom: var(--space-24); text-align: center;">
+                        <h3 style="color: white; border: none; padding: 0; margin: 0; font-size: var(--font-size-3xl);">🩹 Cuts &amp; Wounds</h3>
+                        <p style="margin-top: var(--space-8); font-size: var(--font-size-base); opacity: 0.9;">SEVERITY: Minor to Moderate | COLOR CODE: Blue/Green</p>
+                    </div>
+                    <div class="firstaid-section">
+                        <h4>🔍 Assessment:</h4>
+                        <ul>
+                            <li>Check for embedded foreign objects (do not remove deep objects)</li>
+                            <li>Assess severity: Minor (shallow, small) vs. Severe (deep, large, won't stop bleeding)</li>
+                            <li>Look for signs of infection: redness, warmth, swelling, pus</li>
+                        </ul>
+                    </div>
+                    <div class="firstaid-section">
+                        <h4>📋 Step-by-Step Care:</h4>
+                        <ol class="procedure-steps">
+                            <li><strong>Stay calm</strong> and ask person to sit or lie down</li>
+                            <li><strong>Check for embedded objects</strong> - do not remove if deeply embedded</li>
+                            <li><strong>Apply direct pressure</strong> with clean cloth for 2-3 minutes minimum</li>
+                            <li><strong>Maintain pressure</strong> until bleeding stops completely</li>
+                            <li><strong>Cover with clean bandage</strong> once bleeding has stopped</li>
+                            <li><strong>Monitor for infection</strong> over next few days</li>
+                        </ol>
+                    </div>
+                    <div class="warning-box">
+                        <h4>🚨 Seek Emergency Care If:</h4>
+                        <ul>
+                            <li>Bleeding won't stop after 10 minutes of direct pressure</li>
+                            <li>Deep wound exposing bone, muscle, or fat</li>
+                            <li>Wound on face, hands, or joints</li>
+                            <li>Signs of infection develop (redness, warmth, pus, red streaks)</li>
+                            <li>Wound caused by dirty or rusty object (tetanus risk)</li>
+                        </ul>
+                    </div>
+                    <div class="source-attribution">
+                        <small>Source: Philippine Red Cross Community-Based Health First Aid</small>
+                    </div>
+                    <button class="btn btn-primary" onclick="printGuide('cuts')">🖨️ Print This Guide</button>
+                </div>
+            </div>
+
+            <div id="burns-tab" class="firstaid-content">
+                <div class="firstaid-card" style="border-top: 6px solid #EF4444;">
+                    <div style="background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%); color: white; padding: var(--space-16); border-radius: var(--radius-lg); margin-bottom: var(--space-24); text-align: center;">
+                        <h3 style="color: white; border: none; padding: 0; margin: 0; font-size: var(--font-size-3xl);">🔥 Burns</h3>
+                        <p style="margin-top: var(--space-8); font-size: var(--font-size-base); opacity: 0.9;">SEVERITY: Minor to Critical | COLOR CODE: Red/Orange</p>
+                    </div>
+                    <div class="firstaid-section">
+                        <h4>🎯 Burn Classification:</h4>
+                        <div class="burn-types">
+                            <div class="burn-type-card">
+                                <strong>1st Degree (Minor)</strong>
+                                <p>Red, painful, no blisters. Affects only outer layer of skin.</p>
+                            </div>
+                            <div class="burn-type-card">
+                                <strong>2nd Degree (Moderate)</strong>
+                                <p>Red, blistered, very painful. Affects outer and underlying layer.</p>
+                            </div>
+                            <div class="burn-type-card">
+                                <strong>3rd Degree (Severe)</strong>
+                                <p>White/charred, may not be painful. Affects all layers. CALL 911!</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="firstaid-section">
+                        <h4>✅ For MINOR Burns (1st/2nd degree, small area):</h4>
+                        <ol class="procedure-steps">
+                            <li><strong>Cool with clean running water</strong> for 15-20 minutes until pain reduces</li>
+                            <li><strong>Remove jewelry/clothing</strong> if NOT stuck to skin</li>
+                            <li><strong>Do NOT open blisters</strong> - they protect from infection</li>
+                            <li><strong>Do NOT apply cream, ointment, or ice</strong></li>
+                            <li><strong>Cover with clean, dry bandage</strong> (non-adhesive preferred)</li>
+                            <li><strong>Take pain reliever</strong> if needed (paracetamol or ibuprofen)</li>
+                        </ol>
+                    </div>
+                    <div class="firstaid-section" style="background: rgba(220, 38, 38, 0.1); border-left-color: var(--color-error);">
+                        <h4 style="color: var(--color-error);">🚨 For SEVERE Burns (3rd degree, large area):</h4>
+                        <ol class="procedure-steps">
+                            <li><strong>CALL 911 IMMEDIATELY</strong></li>
+                            <li><strong>Do NOT remove burnt clothing</strong></li>
+                            <li><strong>Do NOT immerse in water</strong> (shock risk for large burns)</li>
+                            <li><strong>Cover with moist, clean cloth</strong></li>
+                            <li><strong>Keep person warm</strong> with blanket (don't overheat)</li>
+                            <li><strong>Monitor breathing</strong> and be prepared for CPR</li>
+                        </ol>
+                    </div>
+                    <div class="warning-box">
+                        <h4>🚨 Go to Hospital Immediately If:</h4>
+                        <ul>
+                            <li>Burn on face, hands, feet, genitals, or major joints</li>
+                            <li>Burn larger than your palm</li>
+                            <li>3rd degree burn (white/charred skin)</li>
+                            <li>Burn caused by chemicals or electricity</li>
+                            <li>Person is infant, elderly, or has chronic illness</li>
+                        </ul>
+                    </div>
+                    <div class="source-attribution">
+                        <small>Source: Philippine Red Cross, American Red Cross</small>
+                    </div>
+                    <button class="btn btn-primary" onclick="printGuide('burns')">🖨️ Print This Guide</button>
+                </div>
+            </div>
+
+            <div id="sprains-tab" class="firstaid-content">
+                <div class="firstaid-card" style="border-top: 6px solid #F59E0B;">
+                    <div style="background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%); color: white; padding: var(--space-16); border-radius: var(--radius-lg); margin-bottom: var(--space-24); text-align: center;">
+                        <h3 style="color: white; border: none; padding: 0; margin: 0; font-size: var(--font-size-3xl);">🦵 Sprains &amp; Strains</h3>
+                        <p style="margin-top: var(--space-8); font-size: var(--font-size-base); opacity: 0.9;">SEVERITY: Minor to Moderate | COLOR CODE: Yellow/Orange</p>
+                    </div>
+                    <div class="firstaid-section">
+                        <h4>❄️ RICE Method:</h4>
+                        <div class="rice-method">
+                            <div class="rice-item">
+                                <div class="rice-letter">R</div>
+                                <div>
+                                    <strong>Rest</strong>
+                                    <p>Avoid using the injured area. Use crutches if needed for leg/ankle injuries.</p>
+                                </div>
+                            </div>
+                            <div class="rice-item">
+                                <div class="rice-letter">I</div>
+                                <div>
+                                    <strong>Ice</strong>
+                                    <p>Apply ice pack for 15-20 minutes every 2-3 hours for first 48 hours. Use cloth between ice and skin.</p>
+                                </div>
+                            </div>
+                            <div class="rice-item">
+                                <div class="rice-letter">C</div>
+                                <div>
+                                    <strong>Compression</strong>
+                                    <p>Wrap with elastic bandage (not too tight - should not cut off circulation).</p>
+                                </div>
+                            </div>
+                            <div class="rice-item">
+                                <div class="rice-letter">E</div>
+                                <div>
+                                    <strong>Elevation</strong>
+                                    <p>Raise injured area above heart level to reduce swelling.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="warning-box">
+                        <h4>🚨 Seek Medical Care If:</h4>
+                        <ul>
+                            <li>Severe pain or can't bear weight on injured limb</li>
+                            <li>Numbness or tingling in the area</li>
+                            <li>Severe swelling or bruising</li>
+                            <li>No improvement after 48 hours of RICE treatment</li>
+                            <li>Hearing/feeling a "pop" at time of injury (possible fracture)</li>
+                            <li>Joint looks deformed or out of place</li>
+                        </ul>
+                    </div>
+                    <button class="btn btn-primary" onclick="printGuide('sprains')">🖨️ Print This Guide</button>
+                </div>
+            </div>
+
+            <div id="fractures-tab" class="firstaid-content">
+                <div class="firstaid-card" style="border-top: 6px solid #7C3AED;">
+                    <div style="background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%); color: white; padding: var(--space-16); border-radius: var(--radius-lg); margin-bottom: var(--space-24); text-align: center;">
+                        <h3 style="color: white; border: none; padding: 0; margin: 0; font-size: var(--font-size-3xl);">🦴 Fractures (Broken Bones)</h3>
+                        <p style="margin-top: var(--space-8); font-size: var(--font-size-base); opacity: 0.9;">SEVERITY: Moderate to Severe | COLOR CODE: Purple/Red</p>
+                    </div>
+                    <div class="firstaid-section">
+                        <h4>⚠️ Signs of Possible Fracture:</h4>
+                        <ul>
+                            <li>Severe pain that worsens with movement</li>
+                            <li>Swelling, bruising, or deformity</li>
+                            <li>Unable to move the affected area</li>
+                            <li>Bone visible through skin (open fracture - CALL 911)</li>
+                            <li>Grinding sensation or sound</li>
+                        </ul>
+                    </div>
+                    <div class="firstaid-section">
+                        <h4>🏥 Immediate Care:</h4>
+                        <ol class="procedure-steps">
+                            <li><strong>Call 911 or seek emergency care immediately</strong></li>
+                            <li><strong>Do NOT try to realign the bone</strong></li>
+                            <li><strong>Immobilize the area</strong> - keep it still, don't move</li>
+                            <li><strong>Apply ice pack</strong> (with cloth barrier) to reduce swelling</li>
+                            <li><strong>Treat for shock</strong> - keep person warm and calm</li>
+                            <li><strong>If open fracture</strong> - cover wound with sterile bandage, don't clean it</li>
+                        </ol>
+                    </div>
+                    <div class="firstaid-section">
+                        <h4>🩺 Simple Splinting (if medical help is delayed):</h4>
+                        <ul>
+                            <li>Use rigid material (board, stick, rolled newspaper)</li>
+                            <li>Pad the splint with cloth</li>
+                            <li>Immobilize joints above and below fracture</li>
+                            <li>Secure with bandages or cloth strips</li>
+                            <li>Check circulation - fingers/toes should be warm and pink</li>
+                        </ul>
+                    </div>
+                    <div class="warning-box">
+                        <h4>⚠️ DO NOT:</h4>
+                        <ul>
+                            <li>Move the person unless absolutely necessary</li>
+                            <li>Try to straighten or realign the bone</li>
+                            <li>Test range of motion</li>
+                            <li>Give food or drink (may need surgery)</li>
+                        </ul>
+                    </div>
+                    <button class="btn btn-primary" onclick="printGuide('fractures')">🖨️ Print This Guide</button>
+                </div>
+            </div>
+
+            <div id="shock-tab" class="firstaid-content">
+                <div class="firstaid-card" style="border-top: 6px solid #DC2626;">
+                    <div style="background: linear-gradient(135deg, #DC2626 0%, #991B1B 100%); color: white; padding: var(--space-16); border-radius: var(--radius-lg); margin-bottom: var(--space-24); text-align: center;">
+                        <h3 style="color: white; border: none; padding: 0; margin: 0; font-size: var(--font-size-3xl);">⚡ Shock (Medical Emergency)</h3>
+                        <p style="margin-top: var(--space-8); font-size: var(--font-size-base); opacity: 0.9;">SEVERITY: CRITICAL - Life Threatening | COLOR CODE: Dark Red/Critical</p>
+                    </div>
+                    <div class="firstaid-section">
+                        <h4>👁️ Recognition Signs:</h4>
+                        <ul>
+                            <li>Pale, cold, clammy skin</li>
+                            <li>Rapid, weak pulse</li>
+                            <li>Rapid, shallow breathing</li>
+                            <li>Weakness, dizziness, or confusion</li>
+                            <li>Nausea or vomiting</li>
+                            <li>Loss of consciousness</li>
+                        </ul>
+                    </div>
+                    <div class="firstaid-section" style="background: rgba(220, 38, 38, 0.1); border-left-color: var(--color-error);">
+                        <h4 style="color: var(--color-error);">🚨 Immediate Management:</h4>
+                        <ol class="procedure-steps">
+                            <li><strong>CALL 911 IMMEDIATELY - Shock is life-threatening</strong></li>
+                            <li><strong>Lay person down</strong> on back</li>
+                            <li><strong>Elevate legs</strong> about 12 inches (unless head, neck, back, or leg injury)</li>
+                            <li><strong>Keep person warm</strong> with blanket or coat</li>
+                            <li><strong>Do NOT give food or water</strong></li>
+                            <li><strong>Monitor breathing and pulse</strong> continuously</li>
+                            <li><strong>Turn head to side</strong> if vomiting</li>
+                            <li><strong>Provide reassurance</strong> - stay calm</li>
+                        </ol>
+                    </div>
+                    <div class="warning-box">
+                        <h4>🚨 CRITICAL: CALL 911</h4>
+                        <p>Shock is a life-threatening medical emergency that requires immediate professional care. Do not delay calling emergency services.</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="printGuide('shock')">🖨️ Print This Guide</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- OFFICIAL INCIDENT REPORTING SECTION -->
+        <section id="incidents" class="section">
+            <h1 style="margin-bottom: var(--space-16); color: var(--color-text);">📋 Official Incident Reporting Guide</h1>
+            <p style="color: var(--color-text-secondary); margin-bottom: var(--space-24); line-height: 1.8; font-size: var(--font-size-lg);">Learn the proper channels and procedures for reporting disasters and emergencies to authorities</p>
+            
+            <div class="emergency-banner" style="margin-bottom: var(--space-32);">
+                <strong>⚠️ FOR EMERGENCIES: CALL 911 IMMEDIATELY</strong>
+            </div>
+            
+            <div class="reporting-callout">
+                <h3>🚨 Immediate Reporting Channels</h3>
+                <div class="official-channels">
+                    <div class="channel-card" style="background: var(--color-bg-4); border: 2px solid var(--color-error);">
+                        <strong style="font-size: var(--font-size-lg); color: var(--color-error);">🚨 FOR EMERGENCY / LIFE-THREATENING</strong>
+                        <a href="tel:911" style="font-size: 36px; color: var(--color-error); font-weight: bold; display: block; margin: var(--space-16) 0;">CALL 911</a>
+                        <p style="font-size: var(--font-size-base); font-weight: var(--font-weight-medium);">Provide:</p>
+                        <ul style="text-align: left; margin: var(--space-12) 0; padding-left: var(--space-24);">
+                            <li>Your name and contact number</li>
+                            <li>Type of incident (fire, accident, medical, etc.)</li>
+                            <li>Exact location/address</li>
+                            <li>Number of victims</li>
+                            <li>Current status</li>
+                        </ul>
+                    </div>
+                    <div class="channel-card" style="background: var(--color-bg-2); border: 2px solid var(--color-warning);">
+                        <strong style="font-size: var(--font-size-lg); color: var(--color-warning);">📞 FOR DISASTER INCIDENTS (NDRRMC)</strong>
+                        <a href="tel:0289115061" style="font-size: 28px; color: var(--color-warning); font-weight: bold; display: block; margin: var(--space-16) 0;">(02) 8911-5061 to 65, Local 100</a>
+                        <p style="font-size: var(--font-size-sm); margin-bottom: var(--space-8);"><strong>Available: 24/7</strong></p>
+                        <p style="font-size: var(--font-size-base); font-weight: var(--font-weight-medium); margin-top: var(--space-16);">Provide Information:</p>
+                        <ul style="text-align: left; margin: var(--space-12) 0; padding-left: var(--space-24); line-height: 1.8;">
+                            <li>☐ Caller's name and contact details</li>
+                            <li>☐ Type of incident (earthquake, flood, typhoon, etc.)</li>
+                            <li>☐ Exact location/address/barangay</li>
+                            <li>☐ Time incident occurred</li>
+                            <li>☐ Number of affected people</li>
+                            <li>☐ Casualties if any</li>
+                            <li>☐ Damages reported (estimated)</li>
+                            <li>☐ Current situation/status</li>
+                        </ul>
+                        <p style="font-size: var(--font-size-base); font-weight: var(--font-weight-medium); margin-top: var(--space-16);">Report Categories:</p>
+                        <ul style="text-align: left; margin: var(--space-12) 0; padding-left: var(--space-24); line-height: 1.8;">
+                            <li>✓ 5+ deaths</li>
+                            <li>✓ 10+ injured/missing</li>
+                            <li>✓ 10+ families (50+ persons) displaced</li>
+                            <li>✓ ₱100,000+ property damage</li>
+                            <li>✓ Disruption lasting 24+ hours</li>
+                            <li>✓ Epidemic outbreaks</li>
+                            <li>✓ Earthquake/tsunami/volcanic activity</li>
+                        </ul>
+                    </div>
+                    <div class="channel-card" style="background: var(--color-bg-1);">
+                        <strong style="font-size: var(--font-size-lg); color: var(--color-primary);">☁️ FOR WEATHER/TYPHOON REPORTING</strong>
+                        <a href="tel:0282840800" style="font-size: 28px; color: var(--color-primary); font-weight: bold; display: block; margin: var(--space-16) 0;">PAGASA: (02) 8284-0800</a>
+                        <p style="font-size: var(--font-size-base); font-weight: var(--font-weight-medium); margin-top: var(--space-16);">Report:</p>
+                        <ul style="text-align: left; margin: var(--space-12) 0; padding-left: var(--space-24); line-height: 1.8;">
+                            <li>Actual weather conditions in your area</li>
+                            <li>Unusual phenomena observed</li>
+                            <li>Local flooding/landslide areas</li>
+                            <li>Damage from strong winds</li>
+                        </ul>
+                    </div>
+                    <div class="channel-card" style="background: var(--color-bg-3);">
+                        <strong style="font-size: var(--font-size-lg); color: var(--color-success);">🏛️ FOR LOCAL/MUNICIPAL LEVEL</strong>
+                        <p style="font-size: var(--font-size-base); margin-top: var(--space-16);"><strong>CONTACT LOCAL DRRMO</strong><br>(Disaster Risk Reduction Management Office)</p>
+                        <ul style="text-align: left; margin: var(--space-12) 0; padding-left: var(--space-24); line-height: 1.8;">
+                            <li>City/Municipal DRRMO office</li>
+                            <li>Barangay office/officials</li>
+                            <li>Local government hall</li>
+                            <li>Emergency hotline (check municipal website)</li>
+                        </ul>
+                        <p style="font-size: var(--font-size-sm); margin-top: var(--space-12); font-style: italic;"><strong>Walk-in Option:</strong> Visit your barangay or municipal hall directly</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="background: var(--color-surface); border: 2px solid var(--color-primary); border-radius: var(--radius-lg); padding: var(--space-24); margin: var(--space-32) 0;">
+                <h3 style="margin-bottom: var(--space-16); color: var(--color-text);">📈 Report Escalation Process</h3>
+                <div style="text-align: center; background: var(--color-bg-1); padding: var(--space-24); border-radius: var(--radius-base); font-size: var(--font-size-lg); line-height: 2;">
+                    <div style="font-weight: var(--font-weight-bold); color: var(--color-primary);">LEVEL 1: BARANGAY</div>
+                    <div>↓ (Report to barangay officials)</div>
+                    <div style="font-weight: var(--font-weight-bold); color: var(--color-primary); margin-top: var(--space-12);">LEVEL 2: MUNICIPAL DRRMO</div>
+                    <div>↓ (Escalated if criteria met)</div>
+                    <div style="font-weight: var(--font-weight-bold); color: var(--color-primary); margin-top: var(--space-12);">LEVEL 3: PROVINCIAL DRRMO</div>
+                    <div>↓ (Escalated to regional level)</div>
+                    <div style="font-weight: var(--font-weight-bold); color: var(--color-primary); margin-top: var(--space-12);">LEVEL 4: REGIONAL DRRMO</div>
+                    <div>↓ (Escalated if major incident)</div>
+                    <div style="font-weight: var(--font-weight-bold); color: var(--color-error); margin-top: var(--space-12); font-size: var(--font-size-xl);">LEVEL 5: NDRRMC NATIONAL</div>
+                </div>
+            </div>
+            
+            <div style="background: var(--color-bg-2); border: 2px solid var(--color-warning); border-radius: var(--radius-lg); padding: var(--space-24); margin: var(--space-32) 0;">
+                <h3 style="margin-bottom: var(--space-16); color: var(--color-text);">✅ What Qualifies as "Major Incident"</h3>
+                <p style="margin-bottom: var(--space-16); color: var(--color-text-secondary);">According to <strong>OCD Memorandum Circular No. 079:</strong></p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--space-12);">
+                    <div style="background: var(--color-surface); padding: var(--space-16); border-radius: var(--radius-base); border-left: 4px solid var(--color-error);">
+                        <strong>✅ 5+ deaths</strong>
+                    </div>
+                    <div style="background: var(--color-surface); padding: var(--space-16); border-radius: var(--radius-base); border-left: 4px solid var(--color-error);">
+                        <strong>✅ 10+ injured OR 10+ missing</strong>
+                    </div>
+                    <div style="background: var(--color-surface); padding: var(--space-16); border-radius: var(--radius-base); border-left: 4px solid var(--color-error);">
+                        <strong>✅ 10+ families (50+ persons) displaced</strong>
+                    </div>
+                    <div style="background: var(--color-surface); padding: var(--space-16); border-radius: var(--radius-base); border-left: 4px solid var(--color-warning);">
+                        <strong>✅ ₱100,000+ property damage</strong>
+                    </div>
+                    <div style="background: var(--color-surface); padding: var(--space-16); border-radius: var(--radius-base); border-left: 4px solid var(--color-warning);">
+                        <strong>✅ 24+ hour service disruption</strong>
+                    </div>
+                    <div style="background: var(--color-surface); padding: var(--space-16); border-radius: var(--radius-base); border-left: 4px solid var(--color-primary);">
+                        <strong>✅ Earthquake, tsunami, volcanic activity (automatic)</strong>
+                    </div>
+                    <div style="background: var(--color-surface); padding: var(--space-16); border-radius: var(--radius-base); border-left: 4px solid var(--color-primary);">
+                        <strong>✅ Epidemic clustering in area</strong>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="background: var(--color-surface); border: 1px solid var(--color-card-border); border-radius: var(--radius-lg); padding: var(--space-24); margin: var(--space-32) 0;">
+                <h3 style="margin-bottom: var(--space-16); color: var(--color-text);">⏱️ Reporting Timeline</h3>
+                <div style="display: grid; gap: var(--space-12);">
+                    <div style="background: var(--color-bg-4); padding: var(--space-16); border-radius: var(--radius-base); border-left: 4px solid var(--color-error);">
+                        <strong style="color: var(--color-error);">INITIAL REPORT:</strong> Within 1 hour of incident
+                    </div>
+                    <div style="background: var(--color-bg-2); padding: var(--space-16); border-radius: var(--radius-base); border-left: 4px solid var(--color-warning);">
+                        <strong style="color: var(--color-warning);">SITUATION UPDATE:</strong> Every 6 hours (first 3-4 days)
+                    </div>
+                    <div style="background: var(--color-bg-1); padding: var(--space-16); border-radius: var(--radius-base); border-left: 4px solid var(--color-primary);">
+                        <strong style="color: var(--color-primary);">ONGOING UPDATES:</strong> Every 12-24 hours
+                    </div>
+                    <div style="background: var(--color-bg-3); padding: var(--space-16); border-radius: var(--radius-base); border-left: 4px solid var(--color-success);">
+                        <strong style="color: var(--color-success);">FINAL REPORT:</strong> After operations end
+                    </div>
+                </div>
+            </div>
+            
+            <div style="background: var(--color-bg-1); border-radius: var(--radius-lg); padding: var(--space-24); margin: var(--space-32) 0;">
+                <h3 style="margin-bottom: var(--space-16); color: var(--color-text);">📊 Official Reports Framework</h3>
+                <ul style="line-height: 2; color: var(--color-text-secondary);">
+                    <li><strong>Initial Report</strong> - Confirm incident severity</li>
+                    <li><strong>Progress Reports</strong> - Update status every 6 hours</li>
+                    <li><strong>DANA</strong> - Damage &amp; Needs Assessment</li>
+                    <li><strong>Final Report</strong> - Summary with lessons learned</li>
+                </ul>
+                <p style="margin-top: var(--space-16); font-size: var(--font-size-sm); color: var(--color-text-secondary);"><em><strong>Legal Framework:</strong> RA 10121 mandates coordinated disaster response through official government channels. All community reports are processed through NDRRMC for verification and appropriate action.</em></p>
+                <p style="margin-top: var(--space-8); font-size: var(--font-size-sm); color: var(--color-text-secondary);"><em><strong>Operation L!STO:</strong> Follow the official reporting protocol as part of the LISTO (Ligtas at Handa sa Sakuna at Peligro) framework.</em></p>
+            </div>
+            
+            <div id="map" style="margin-bottom: var(--space-32);"></div>
+
+            <div class="map-controls">
+                <h3 style="margin-bottom: var(--space-16);">Report an Incident</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Incident Type</label>
+                        <select id="incidentType">
+                            <option value="flooding">Flooding</option>
+                            <option value="earthquake">Earthquake</option>
+                            <option value="fire">Fire</option>
+                            <option value="landslide">Landslide</option>
+                            <option value="disease">Disease Outbreak</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Severity</label>
+                        <select id="severity">
+                            <option value="low">Low</option>
+                            <option value="medium">Medium</option>
+                            <option value="high">High</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Location</label>
+                        <input type="text" id="location" placeholder="Your location">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="description" placeholder="Describe the incident..."></textarea>
+                </div>
+                <button class="btn btn-primary" onclick="submitReport()">Submit Report</button>
+            </div>
+
+            <h3 style="margin: var(--space-48) 0 var(--space-16); text-align: center; font-size: var(--font-size-2xl); color: var(--color-text);">🗺️ Real-Time Official Incident Map</h3>
+            <div class="incident-disclaimer">
+                <p style="color: var(--color-text-secondary); margin-bottom: var(--space-8);">The map below displays official NDRRMC-reported active incidents, evacuation centers, and relief distribution points. Data is updated in real-time from verified government sources.</p>
+                <p style="font-size: var(--font-size-sm); color: var(--color-text-secondary);"><strong>Data Sources:</strong> NDRRMC Operations Center, Local DRRM Offices, Philippine Red Cross Field Reports</p>
+                <p style="font-size: var(--font-size-xs); margin-top: var(--space-8); color: var(--color-text-secondary); font-style: italic;">Pursuant to RA 10121 Section 12: National Council shall coordinate, integrate, and supervise all disaster risk reduction activities</p>
+            </div>
+            <div class="reports-list" id="reportsList"></div>
+        </section>
+
+        <!-- GUIDES SECTION -->
+        <section id="guides" class="section">
+            <h1 style="margin-bottom: var(--space-16);">📋 Disaster Preparedness Guides</h1>
+            <p style="color: var(--color-text-secondary); margin-bottom: var(--space-16);">Complete checklists for before, during, and after disasters - All guides are downloadable and printable</p>
+            <div style="background: var(--color-bg-3); border-left: 4px solid var(--color-success); padding: var(--space-20); border-radius: var(--radius-base); margin-bottom: var(--space-24);">
+                <h3 style="margin-bottom: var(--space-12); color: var(--color-text);">🛡️ Based on Operation L!STO Framework</h3>
+                <p style="color: var(--color-text-secondary); margin-bottom: var(--space-12);">These guides follow the official <strong>Operation L!STO</strong> (Ligtas at Handa sa Sakuna at Peligro) framework developed by NDRRMC, organizing preparedness into three phases:</p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-12); margin-top: var(--space-16);">
+                    <div style="background: var(--color-surface); padding: var(--space-12); border-radius: var(--radius-base);">
+                        <strong style="color: var(--color-primary);">✓ BEFORE</strong>
+                        <p style="font-size: var(--font-size-sm); margin-top: var(--space-4); color: var(--color-text-secondary);">Preparedness &amp; Planning</p>
+                    </div>
+                    <div style="background: var(--color-surface); padding: var(--space-12); border-radius: var(--radius-base);">
+                        <strong style="color: var(--color-warning);">⚠️ DURING</strong>
+                        <p style="font-size: var(--font-size-sm); margin-top: var(--space-4); color: var(--color-text-secondary);">Response &amp; Safety</p>
+                    </div>
+                    <div style="background: var(--color-surface); padding: var(--space-12); border-radius: var(--radius-base);">
+                        <strong style="color: var(--color-success);">🔄 AFTER</strong>
+                        <p style="font-size: var(--font-size-sm); margin-top: var(--space-4); color: var(--color-text-secondary);">Recovery &amp; Rehabilitation</p>
+                    </div>
+                </div>
+                <p style="font-size: var(--font-size-xs); margin-top: var(--space-16); color: var(--color-text-secondary);"><em>Reference: Operation L!STO Manual, NDRRMC &amp; Office of Civil Defense</em></p>
+            </div>
+            
+            <div class="guide-print-controls">
+                <button class="btn btn-primary" onclick="printAllGuides()" style="padding: var(--space-12) var(--space-24);">
+                    🖨️ Print All Guides
+                </button>
+                <button class="btn btn-secondary" onclick="downloadAllGuides()" style="padding: var(--space-12) var(--space-24); margin-left: var(--space-12);">
+                    💾 Download All as PDF
+                </button>
+            </div>
+            <p style="text-align: center; color: var(--color-text-secondary); font-size: var(--font-size-sm); margin-bottom: var(--space-32);">Individual guides can be printed from within each section</p>
+            
+            <div style="background: var(--color-surface); border: 2px solid var(--color-primary); border-radius: var(--radius-lg); padding: var(--space-32); margin-bottom: var(--space-32); box-shadow: var(--shadow-lg);">
+                <h2 style="text-align: center; margin-bottom: var(--space-24); color: var(--color-text); font-size: var(--font-size-3xl);">🎒 EMERGENCY GO BAG / BALDE CHECKLIST</h2>
+                <p style="text-align: center; color: var(--color-text-secondary); margin-bottom: var(--space-32); font-size: var(--font-size-lg); line-height: 1.8;">Official reference images from Philippine government agencies - Use both as comprehensive preparation guides</p>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: var(--space-32); margin-bottom: var(--space-32);">
+                    <div style="background: var(--color-bg-1); padding: var(--space-24); border-radius: var(--radius-lg); border: 2px solid var(--color-primary); box-shadow: var(--shadow-md);">
+                        <h3 style="text-align: center; margin-bottom: var(--space-16); color: var(--color-primary); font-size: var(--font-size-xl); font-weight: var(--font-weight-bold);">DOST-PHIVOLCS Version (English)</h3>
+                        <div style="background: white; padding: var(--space-16); border-radius: var(--radius-base); margin-bottom: var(--space-16); box-shadow: var(--shadow-sm);">
+                            <img src="GoBag.jpg" alt="Emergency Go Bag Checklist - DOST PHIVOLCS" style="width: 100%; height: auto; border-radius: var(--radius-base); display: block;">
+                        </div>
+                        <p style="text-align: center; font-size: var(--font-size-sm); color: var(--color-text); margin-bottom: var(--space-8); font-weight: var(--font-weight-semibold); line-height: 1.6;">"Things That Should Be In Your Emergency Supply Kit"</p>
+                        <p style="text-align: center; font-size: var(--font-size-xs); color: var(--color-text-secondary); margin-bottom: var(--space-16);">Source: DOST-PHIVOLCS</p>
+                    </div>
+                    
+                    <div style="background: var(--color-bg-2); padding: var(--space-24); border-radius: var(--radius-lg); border: 2px solid var(--color-warning); box-shadow: var(--shadow-md);">
+                        <h3 style="text-align: center; margin-bottom: var(--space-16); color: var(--color-warning); font-size: var(--font-size-xl); font-weight: var(--font-weight-bold);">DOH/DILG Version (Filipino)</h3>
+                        <div style="background: white; padding: var(--space-16); border-radius: var(--radius-base); margin-bottom: var(--space-16); box-shadow: var(--shadow-sm);">
+                            <img src="GoBag-V2.jpg" alt="Ano ang laman ng isang GO BAG - DOH DILG" style="width: 100%; height: auto; border-radius: var(--radius-base); display: block;">
+                        </div>
+                        <p style="text-align: center; font-size: var(--font-size-sm); color: var(--color-text); margin-bottom: var(--space-8); font-weight: var(--font-weight-semibold); line-height: 1.6;">"Ano ang laman ng isang GO BAG?"</p>
+                        <p style="text-align: center; font-size: var(--font-size-xs); color: var(--color-text-secondary); margin-bottom: var(--space-16);">Source: DOH/DILG/Bicol</p>
+                    </div>
+                </div>
+                
+                <div style="background: var(--color-bg-3); padding: var(--space-20); border-radius: var(--radius-base); border-left: 4px solid var(--color-success);">
+                    <h4 style="margin-bottom: var(--space-12); color: var(--color-success); font-size: var(--font-size-lg);">✅ How to Use These Guides:</h4>
+                    <ul style="color: var(--color-text-secondary); line-height: 1.8; margin-left: var(--space-20);">
+                        <li>Both images show official emergency kit recommendations from Philippine government agencies</li>
+                        <li>The PHIVOLCS version (English) focuses on basic survival essentials</li>
+                        <li>The DOH/DILG version (Filipino) provides detailed categorization with PPE and technical items</li>
+                        <li>Use both as complementary checklists for comprehensive emergency preparedness</li>
+                        <li>Print or download these images to keep with your emergency supplies</li>
+                        <li>Review and update your Go Bag contents every 6 months</li>
+                    </ul>
+                </div>
+                
+                <p style="text-align: center; margin-top: var(--space-24); font-size: var(--font-size-sm); color: var(--color-text-secondary); font-style: italic;">Click images to view full size | Right-click to save | Print-friendly format available</p>
+            </div>
+            
+            <div class="accordion" id="guidesAccordion"></div>
+        </section>
+
+        <!-- MARKETPLACE SECTION -->
+        <section id="marketplace" class="section">
+            <h1 style="margin-bottom: var(--space-24);">🛒 Emergency Essentials Marketplace</h1>
+            <p style="color: var(--color-text-secondary); margin-bottom: var(--space-32);">Curated emergency supplies available on trusted platforms</p>
+            
+            <div class="marketplace-categories" id="marketplaceGrid"></div>
+        </section>
+
+        <!-- DISEASES SECTION -->
+        <section id="diseases" class="section">
+            <h1 style="margin-bottom: var(--space-24);">🏥 Leptospirosis &amp; Dengue Information</h1>
+            
+            <div class="disease-tabs">
+                <button class="tab-btn active" onclick="showDiseaseTab('leptospirosis')">Leptospirosis</button>
+                <button class="tab-btn" onclick="showDiseaseTab('dengue')">Dengue</button>
+            </div>
+
+            <div id="leptospirosis-tab" class="tab-content active">
+                <div class="disease-section">
+                    <h3>What is Leptospirosis?</h3>
+                    <p>Leptospirosis is a bacterial infection transmitted through contaminated water or soil from rodent urine. It's especially common during floods and in areas with poor sanitation.</p>
+                    <div style="background: var(--color-bg-4); padding: var(--space-16); border-radius: var(--radius-base); margin-top: var(--space-16);">
+                        <p style="font-weight: var(--font-weight-bold); color: var(--color-error); margin-bottom: var(--space-8);">📊 2025 Leptospirosis Statistics</p>
+                        <div style="font-size: var(--font-size-sm); color: var(--color-text-secondary);">
+                            <div><strong>Total Cases:</strong> 4,859 cases (June-September 2025)</div>
+                            <div style="margin-top: var(--space-4);">📈 <strong>Increase:</strong> 43.4% vs same period 2024</div>
+                            <div style="margin-top: var(--space-4);">📊 <strong>Breakdown:</strong> 2,396 cases (June 8 - August 7, 2025)</div>
+                            <div style="margin-top: var(--space-4);">📰 <strong>Sources:</strong> DOH, ABS-CBN, Inquirer.net</div>
+                            <div style="margin-top: var(--space-4);">🗓️ <strong>As of:</strong> September 5, 2025</div>
+                            <div style="margin-top: var(--space-4);">🔄 <strong>Update Frequency:</strong> Weekly via DOH</div>
+                            <div style="margin-top: var(--space-4);">⚠️ <strong>High-Risk Period:</strong> Monsoon season (June-November)</div>
+                            <div style="margin-top: var(--space-8);">
+                                <a href="https://www.doh.gov.ph/" target="_blank" class="btn btn-secondary btn-sm">DOH Official Website →</a>
+                                <a href="https://news.abs-cbn.com/" target="_blank" class="btn btn-secondary btn-sm" style="margin-left: 8px;">ABS-CBN Health News →</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="disease-section">
+                    <h3>Symptoms (appear 5-30 days after exposure)</h3>
+                    <div class="symptoms-grid">
+                        <div class="symptom-item">🌡️ High Fever</div>
+                        <div class="symptom-item">😫 Severe Headache</div>
+                        <div class="symptom-item">💪 Muscle Aches</div>
+                        <div class="symptom-item">👁️ Red Eyes</div>
+                        <div class="symptom-item">🤢 Nausea</div>
+                        <div class="symptom-item">🤮 Vomiting</div>
+                    </div>
+                </div>
+
+                <div class="disease-section">
+                    <h3>Prevention Methods</h3>
+                    <ul style="color: var(--color-text-secondary); line-height: 1.8;">
+                        <li>Avoid wading in floodwaters</li>
+                        <li>Wear protective boots and clothing when necessary</li>
+                        <li>Control rodent populations</li>
+                        <li>Maintain proper sanitation</li>
+                        <li>Cover wounds with waterproof bandages</li>
+                        <li>Take prophylactic antibiotics if exposed (consult doctor)</li>
+                    </ul>
+                </div>
+
+                <div class="warning-box">
+                    <h4>⚠️ When to Seek Medical Care</h4>
+                    <p>Seek immediate medical attention if you develop fever, headache, and muscle pain after exposure to floodwater or areas with poor sanitation, especially within 5-30 days of exposure.</p>
+                </div>
+            </div>
+
+            <div id="dengue-tab" class="tab-content">
+                <div class="disease-section">
+                    <h3>What is Dengue?</h3>
+                    <p>Dengue is a viral infection transmitted by Aedes aegypti mosquitoes. There are four serotypes (DENV-1, DENV-2, DENV-3, DENV-4), and infection with one does not provide immunity to others.</p>
+                    <div style="background: var(--color-bg-4); padding: var(--space-16); border-radius: var(--radius-base); margin-top: var(--space-16);">
+                        <p style="font-weight: var(--font-weight-bold); color: var(--color-error); margin-bottom: var(--space-8);">📊 2025 Dengue Statistics - Recent Surge Alert</p>
+                        <div style="font-size: var(--font-size-sm); color: var(--color-text-secondary);">
+                            <div><strong>Most Recent Report:</strong> 8,460 cases (October 1-15, 2025)</div>
+                            <div style="margin-top: var(--space-4);">📰 <strong>Source:</strong> DOH via Inquirer.net</div>
+                            <div style="margin-top: var(--space-4);">🔗 <a href="https://newsinfo.inquirer.net/2129913/doh-logs-8460-dengue-cases-in-first-2-weeks-of-october" target="_blank" style="color: var(--color-primary); text-decoration: underline;">Read Full Article: "DOH logs 8,460 dengue cases in first 2 weeks of October"</a></div>
+                            <div style="margin-top: var(--space-12); padding-top: var(--space-12); border-top: 1px solid var(--color-border);">
+                                <div style="color: var(--color-error);"><strong>⚠️ Deaths:</strong> 437+ fatalities (As of mid-2025)</div>
+                                <div style="margin-top: var(--space-4);">📰 <strong>Source:</strong> Vax-Before-Travel citing DOH</div>
+                                <div style="margin-top: var(--space-4);">🔗 <a href="https://www.vax-before-travel.com/2025/08/20/philippines-reports-437-dengue-related-deaths" target="_blank" style="color: var(--color-primary); text-decoration: underline;">Read Full Article: "Philippines Reports 437 Dengue-Related Deaths"</a></div>
+                            </div>
+                            <div style="margin-top: var(--space-12);">🗓️ <strong>Last Updated:</strong> October 2025</div>
+                            <div style="margin-top: var(--space-4);">🔄 <strong>Update Frequency:</strong> Bi-weekly via DOH</div>
+                            <div style="margin-top: var(--space-4);">🦠 <strong>Serotypes:</strong> DENV-1, DENV-2, DENV-3, DENV-4 all circulating</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="disease-section">
+                    <h3>Symptoms (appear 3-14 days after mosquito bite)</h3>
+                    <div class="symptoms-grid">
+                        <div class="symptom-item">🌡️ High Fever</div>
+                        <div class="symptom-item">😫 Severe Headache</div>
+                        <div class="symptom-item">👁️ Pain Behind Eyes</div>
+                        <div class="symptom-item">💪 Joint/Muscle Pain</div>
+                        <div class="symptom-item">🔴 Skin Rash</div>
+                        <div class="symptom-item">🤮 Nausea/Vomiting</div>
+                    </div>
+                </div>
+
+                <div class="disease-section">
+                    <h3>Prevention Methods</h3>
+                    <ul style="color: var(--color-text-secondary); line-height: 1.8;">
+                        <li>Eliminate mosquito breeding sites (stagnant water)</li>
+                        <li>Use insect repellent regularly</li>
+                        <li>Wear long-sleeved clothing</li>
+                        <li>Install window and door screens</li>
+                        <li>Practice the 4S strategy: Search and destroy, Self-protection, Seek early consultation, Support fogging</li>
+                    </ul>
+                </div>
+
+                <div class="warning-box">
+                    <h4>🚨 Severe Dengue Warning Signs</h4>
+                    <p><strong>Seek immediate emergency care if you experience:</strong></p>
+                    <ul style="margin-top: var(--space-12);">
+                        <li>Severe abdominal pain</li>
+                        <li>Persistent vomiting</li>
+                        <li>Bleeding from nose or gums</li>
+                        <li>Vomiting blood</li>
+                        <li>Rapid breathing or difficulty breathing</li>
+                        <li>Fatigue or restlessness</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- NEWS SECTION - Redirects to home for official feeds -->
+        <section id="news" class="section">
+            <h1 style="margin-bottom: var(--space-16);">📰 Live Official Updates</h1>
+            <p style="color: var(--color-text-secondary); margin-bottom: var(--space-24);">All official alerts and updates are displayed on the home page with embedded feeds from PAGASA, PHIVOLCS, and NDRRMC</p>
+            
+            <div style="text-align: center; padding: var(--space-32); background: var(--color-bg-1); border-radius: var(--radius-lg);">
+                <h3 style="margin-bottom: var(--space-16);">View Live Official Alert Feeds</h3>
+                <button class="btn btn-primary" onclick="showSection('home')" style="padding: var(--space-12) var(--space-32);">Go to Home Page →</button>
+            </div>
+            
+            <h2 style="margin: var(--space-32) 0 var(--space-16);">Recent Official Bulletins &amp; Advisories</h2>
+            <div class="news-feed" id="newsFeed"></div>
+        </section>
+
+        <!-- HAZARDS SECTION -->
+        <section id="hazards" class="section">
+            <h1 style="margin-bottom: var(--space-24);">🗺️ Interactive Hazard Maps</h1>
+            <p style="color: var(--color-text-secondary); margin-bottom: var(--space-32);">Check your location's hazard risk assessment using official government tools</p>
+            
+            <div class="hazardhunter-callout">
+                <div class="hazardhunter-icon">🗺️</div>
+                <h2>Check Your Location Hazard Risk</h2>
+                <p class="hazardhunter-note">The "Enter Your Location" search box cannot provide accurate real-time hazard data. For verified, government-issued hazard assessments, use the official tool:</p>
+                <a href="https://hazardhunter.georisk.gov.ph/" target="_blank" class="btn-hazardhunter">
+                    <span class="btn-hazardhunter-text">CHECK ON HAZARDHUNTERPH - Official</span>
+                    <span class="btn-hazardhunter-arrow">→</span>
+                </a>
+                <div class="hazardhunter-url">https://hazardhunter.georisk.gov.ph/</div>
+                <div class="hazardhunter-features">
+                    <h4>This official government tool provides:</h4>
+                    <ul>
+                        <li>🌍 Seismic/Earthquake hazard maps</li>
+                        <li>🌋 Volcano proximity &amp; alert levels</li>
+                        <li>💧 Flood-prone area identification</li>
+                        <li>🌊 Storm surge susceptibility zones</li>
+                        <li>⛰️ Landslide-susceptible terrain</li>
+                    </ul>
+                    <p class="hazardhunter-verify">✓ Accurate, government-verified geospatial data</p>
+                </div>
+            </div>
+
+            <div style="background: var(--color-surface); border: 1px solid var(--color-card-border); border-radius: var(--radius-lg); padding: var(--space-24);">
+                <h3 style="margin-bottom: var(--space-16);">Official Hazard Mapping Resources</h3>
+                <div style="display: grid; gap: var(--space-16);">
+                    <div style="padding: var(--space-16); background: var(--color-bg-1); border-radius: var(--radius-base);">
+                        <h4>🗺️ HazardHunterPH (Official Hazard Maps)</h4>
+                        <p style="color: var(--color-text-secondary); margin: var(--space-8) 0;">Comprehensive hazard assessment maps with verified government geospatial data</p>
+                        <a href="https://hazardhunter.georisk.gov.ph/" target="_blank" class="btn btn-primary" style="padding: var(--space-12) var(--space-20);">Visit HazardHunterPH →</a>
+                    </div>
+                    <div style="padding: var(--space-16); background: var(--color-bg-2); border-radius: var(--radius-base);">
+                        <h4>🌍 GeoMapperPH</h4>
+                        <p style="color: var(--color-text-secondary); margin: var(--space-8) 0;">Real-time geospatial data and mapping</p>
+                        <a href="https://geoportal.gov.ph/" target="_blank" class="btn btn-secondary">Visit GeoMapperPH</a>
+                    </div>
+                    <div style="padding: var(--space-16); background: var(--color-bg-3); border-radius: var(--radius-base);">
+                        <h4>🌋 PHIVOLCS Maps</h4>
+                        <p style="color: var(--color-text-secondary); margin: var(--space-8) 0;">Earthquake and volcano monitoring data</p>
+                        <a href="https://www.phivolcs.dost.gov.ph/" target="_blank" class="btn btn-secondary">Visit PHIVOLCS</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- QUIZ SECTION -->
+        <section id="quiz" class="section">
+            <div class="quiz-container">
+                <h1 style="margin-bottom: var(--space-24); text-align: center;">🎯 Disaster Preparedness Quiz</h1>
+                
+                <div id="quizStart">
+                    <div class="quiz-header">
+                        <h2>Test Your Knowledge</h2>
+                        <p style="color: var(--color-text-secondary); margin-top: var(--space-16);">Take this comprehensive quiz to assess your disaster preparedness knowledge. Topics include NDRRMC protocols, hazard response, first aid, and disease prevention.</p>
+                        <button class="btn btn-primary" style="margin-top: var(--space-24); padding: var(--space-12) var(--space-32);" onclick="startQuiz()">Start Quiz</button>
+                    </div>
+                </div>
+
+                <div id="quizQuestion" style="display: none;">
+                    <div class="quiz-header">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-16);">
+                            <span id="questionCounter">Question 1 of 10</span>
+                            <span id="scoreDisplay">Score: 0/0</span>
+                        </div>
+                        <div class="quiz-progress">
+                            <div class="quiz-progress-bar" id="progressBar"></div>
+                        </div>
+                    </div>
+
+                    <div class="question-card">
+                        <div class="question-number" id="questionNumber"></div>
+                        <div class="question-text" id="questionText"></div>
+                        <div class="options" id="optionsContainer"></div>
+                        <div id="feedbackContainer"></div>
+                    </div>
+
+                    <div class="quiz-actions">
+                        <button class="btn btn-secondary" onclick="previousQuestion()">Previous</button>
+                        <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" disabled>Next Question</button>
+                    </div>
+                </div>
+
+                <div id="quizResults" style="display: none;">
+                    <div class="quiz-results">
+                        <h2>Quiz Complete! 🎉</h2>
+                        <div class="results-score" id="finalScore"></div>
+                        <div class="results-message" id="resultsMessage"></div>
+                        <button class="btn btn-primary" onclick="restartQuiz()">Take Quiz Again</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Official Sources</h4>
+                <ul class="footer-links">
+                    <li><a href="https://www.ndrrmc.gov.ph/" target="_blank">NDRRMC</a></li>
+                    <li><a href="https://pagasa.dost.gov.ph/" target="_blank">PAGASA</a></li>
+                    <li><a href="https://phivolcs.dost.gov.ph/" target="_blank">PHIVOLCS</a></li>
+                    <li><a href="https://redcross.org.ph/" target="_blank">Philippine Red Cross</a></li>
+                    <li><a href="https://www.doh.gov.ph/" target="_blank">DOH</a></li>
+                    <li><a href="https://hazardhunter.georisk.gov.ph/" target="_blank">HazardHunterPH</a></li>
+                    <li><a href="https://www.pdrf.org/" target="_blank">PDRF</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Emergency Numbers</h4>
+                <ul class="footer-links">
+                    <li><strong style="color: var(--color-error);">Emergency: 911</strong></li>
+                    <li>NDRRMC: (02) 8911-5061</li>
+                    <li>PAGASA: (02) 8284-0800</li>
+                    <li>Red Cross: 143</li>
+                    <li>PNP: 117</li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>How to Report Incidents</h4>
+                <ul class="footer-links">
+                    <li>Life-threatening: Call 911</li>
+                    <li>Disasters: NDRRMC (02) 8911-5061</li>
+                    <li>Weather: PAGASA (02) 8284-0800</li>
+                    <li>Local: Contact DRRMO/Barangay</li>
+                    <li><a href="#" onclick="showSection('incidents'); return false;">View Full Reporting Guide</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Resources</h4>
+                <ul class="footer-links">
+                    <li><a href="#" onclick="showSection('guides'); return false;">Safety Guides</a></li>
+                    <li><a href="#" onclick="showSection('quiz'); return false;">Preparedness Quiz</a></li>
+                    <li><a href="#" onclick="showSection('diseases'); return false;">Health Information</a></li>
+                    <li><a href="https://www.pdrf.org/" target="_blank">PDRF (Private Sector)</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            <p style="font-weight: var(--font-weight-bold); margin-bottom: var(--space-12);">MAGING LAGING HANDA PH | Always Be Ready Philippines</p>
+            <p style="margin-bottom: var(--space-8); font-size: var(--font-size-sm);"><strong>Official Data Sources:</strong></p>
+            <p style="font-size: var(--font-size-xs); line-height: 1.6;">
+                • PAGASA (pagasa.dost.gov.ph) - Weather &amp; Typhoon Forecasts<br>
+                • PHIVOLCS (phivolcs.dost.gov.ph) - Earthquakes &amp; Volcanoes<br>
+                • NDRRMC (ndrrmc.gov.ph) - Disaster Coordination<br>
+                • DOH (doh.gov.ph) - Disease Surveillance &amp; Statistics<br>
+                • HazardHunterPH (hazardhunter.georisk.gov.ph) - Hazard Maps<br>
+                • PDRF (pdrf.org) - Philippine Disaster Resilience Foundation
+            </p>
+            <p style="margin-top: var(--space-16); font-size: var(--font-size-sm);"><strong>Data Last Updated:</strong> November 11, 2025, 12:00 PM PST</p>
+            <p style="margin-top: var(--space-8); font-size: var(--font-size-sm);">Statistics: Dengue (Oct 15, 2025 via Inquirer) | Leptospirosis (Sept 2025 via DOH)</p>
+            <p style="margin-top: var(--space-16); font-size: var(--font-size-sm);"><strong>Based on RA 10121</strong> (Philippine Disaster Risk Reduction and Management Act of 2010) &amp; Operation L!STO Framework</p>
+            <p style="margin-top: var(--space-16); color: var(--color-error); font-weight: var(--font-weight-bold);">⚠️ DISCLAIMER: For emergencies, ALWAYS CALL 911 first.</p>
+            <p style="margin-top: var(--space-4); font-size: var(--font-size-xs);">This website provides educational information - official government sources are authoritative.</p>
+            <p style="margin-top: var(--space-16); font-size: var(--font-size-xs); font-weight: var(--font-weight-bold);">© 2025 Maging Laging Handa PH Project | Open Source | Non-Commercial | Educational Use Only</p>
+            <p style="margin-top: var(--space-4); font-size: var(--font-size-xs);">Not affiliated with government agencies. Reference: Philippines Disaster Management Handbook 2025</p>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="app.js"></script>
+    <style media="print">
+      .header, .nav-menu, .footer, .btn, button { display: none !important; }
+      body { background: white; color: black; }
+      .section { display: block !important; page-break-after: always; }
+      .firstaid-card, .accordion-item { border: 2px solid #000; margin-bottom: 20px; }
+    </style>
+</body>
+</html>
